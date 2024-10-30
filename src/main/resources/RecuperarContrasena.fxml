@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #9ef5aa;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.RecuperarContrasenaControlador">
+   <children>
+      <Label layoutX="153.0" layoutY="53.0" text="Aquí podrá actualizar su contraseña">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="45.0" layoutY="96.0" text="Copie el código enviado a su correo para cambiar su contraseña">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField fx:id="txtCodigoActivacion" layoutX="170.0" layoutY="143.0" prefHeight="36.0" prefWidth="257.0" />
+      <Label layoutX="45.0" layoutY="213.0" text="Ingrese la nueva contraseña:">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="txtContrasenaNueva" layoutX="170.0" layoutY="260.0" prefHeight="36.0" prefWidth="258.0" />
+      <Button layoutX="344.0" layoutY="326.0" mnemonicParsing="false" onAction="#actualizarContrasena" text="Actualizar Contraseña" />
+      <Button layoutX="110.0" layoutY="326.0" mnemonicParsing="false" onAction="#volver" text="Volver para iniciar sesion" />
+   </children>
+</AnchorPane>

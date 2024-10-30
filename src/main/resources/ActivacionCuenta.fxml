@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #9ef5aa;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.ActivacionCuentaControlador">
+   <children>
+      <Label layoutX="165.0" layoutY="35.0" text="ACTIVACIÓN DE CUENTA">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="115.0" fitWidth="186.0" layoutX="481.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@img/Book.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="108.0" layoutY="95.0" prefHeight="132.0" prefWidth="342.0" text="Antes de iniciar sesión en tu cuenta deberás copiar el código de activación enviado a tu correo al momento del registro" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+
+      <Button fx:id="buttonValidar" layoutX="139.0" layoutY="293.0" mnemonicParsing="false" onAction="#activarCuenta" style="-fx-background-color: #0edfc0;" text="Activar Cuenta">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="buttonVolver" layoutX="334.0" layoutY="293.0" mnemonicParsing="false" onAction="#volver" prefHeight="37.0" prefWidth="95.0" style="-fx-background-color: #0edfc0;" text="Volver">
+         <font>
+            <Font name="System Bold" size="16.0" />
+         </font>
+      </Button>
+      <TextField fx:id="txtCodigo" layoutX="116.0" layoutY="218.0" prefHeight="38.0" prefWidth="333.0" />
+   </children>
+</AnchorPane>

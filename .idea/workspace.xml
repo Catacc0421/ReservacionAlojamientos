@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c521f9e4-76f1-4539-8ba2-4a6bc91d613e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/app/ReservasApp.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/controladores/ActivacionCuentaControlador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/controladores/IniciarSesionControlador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/controladores/InicioControlador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/controladores/PanelAdministradorControlador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/controladores/PanelUsuarioControlador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/controladores/RecuperarContrasenaControlador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/controladores/RegistroControlador.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/controladores/observador/Observable.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/factory/AlojamientoApartamento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/factory/AlojamientoCasa.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/factory/AlojamientoHotel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/Alojamiento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/Compra.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/EstadisticasReserva.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/Factura.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/Habitacion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/ImageTableCell.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/Reserva.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/ReservaPrincipal.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/Sesion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/Usuario.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/modelo/enums/TipoAlojamiento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/servicios/CreacionAlojamiento.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/servicios/Notificacion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/servicios/ReservaServicios.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/utils/EnvioEmail.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/utils/EnvioSMS.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/utils/ReservaUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/ActivacionCuenta.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/IniciarSesion.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Inicio.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/PanelAdministrador.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/PanelUsuario.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/RecuperarContrasena.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/Registro.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/style.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="FxmlFile" />
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2mlomB5hKGBFctNzotdAsRoJ8aG" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Maven.co.edu.uniquindio.UniEventos [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/programacion 2/ReservacionAlojamientos",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\programacion 2\ReservacionAlojamientos\src\main\resources" />
+      <recent name="C:\programacion 2\ReservacionAlojamientos\src\main\java\co\edu\uniquindio\reservacionAlojamientos" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\programacion 2\ReservacionAlojamientos\src\main\resources\IMG" />
+    </key>
+    <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="co.edu.uniquindio.reservacionAlojamientos.servicios" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="co.edu.uniquindio.reservacionAlojamientos.servicios" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-corretto-21.0.2-4caba194b151-51586f01" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c521f9e4-76f1-4539-8ba2-4a6bc91d613e" name="Changes" comment="" />
+      <created>1727660681820</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1727660681820</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/co/edu/uniquindio/reservacionAlojamientos/controladores/InicioControlador.java</url>
+          <line>134</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
