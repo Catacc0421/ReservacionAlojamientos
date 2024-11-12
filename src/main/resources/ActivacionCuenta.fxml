@@ -1,38 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #9ef5aa;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.ActivacionCuentaControlador">
+<VBox alignment="CENTER" prefHeight="377.0" prefWidth="593.0" style="-fx-background-color: #9ef5aa; -fx-padding: 30; -fx-spacing: 30;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.ActivacionCuentaControlador">
    <children>
-      <Label layoutX="165.0" layoutY="35.0" text="ACTIVACIÓN DE CUENTA">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="115.0" fitWidth="186.0" layoutX="481.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@img/Book.png" />
-         </image>
-      </ImageView>
-      <Label layoutX="108.0" layoutY="95.0" prefHeight="132.0" prefWidth="342.0" text="Antes de iniciar sesión en tu cuenta deberás copiar el código de activación enviado a tu correo al momento del registro" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
+      <HBox alignment="CENTER" prefHeight="89.0" prefWidth="517.0" style="-fx-spacing: 50;">
+         <children>
+            <Region prefHeight="115.0" prefWidth="50.0" />
+            <Label alignment="CENTER" contentDisplay="CENTER" text="ACTIVACIÓN DE CUENTA">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="84.0" fitWidth="115.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@img/Book.png" />
+               </image>
+            </ImageView>
+         </children>
+      </HBox>
+      <Label prefHeight="132.0" prefWidth="342.0" text="Antes de iniciar sesión en tu cuenta deberás copiar el código de activación enviado a tu correo al momento del registro" textAlignment="CENTER" textOverrun="CLIP" wrapText="true">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
-
-      <Button fx:id="buttonValidar" layoutX="139.0" layoutY="293.0" mnemonicParsing="false" onAction="#activarCuenta" style="-fx-background-color: #0edfc0;" text="Activar Cuenta">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Button>
-      <Button fx:id="buttonVolver" layoutX="334.0" layoutY="293.0" mnemonicParsing="false" onAction="#volver" prefHeight="37.0" prefWidth="95.0" style="-fx-background-color: #0edfc0;" text="Volver">
-         <font>
-            <Font name="System Bold" size="16.0" />
-         </font>
-      </Button>
-      <TextField fx:id="txtCodigo" layoutX="116.0" layoutY="218.0" prefHeight="38.0" prefWidth="333.0" />
+      <TextField fx:id="txtCodigo" prefHeight="40.0" prefWidth="533.0" promptText="código de activación" style="-fx-max-width: 350;" />
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 60;">
+         <children>
+            <Button fx:id="buttonVolver" mnemonicParsing="false" onAction="#volver" prefHeight="37.0" prefWidth="95.0" style="-fx-background-color: #0edfc0;" text="Volver">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Button>
+            <Button fx:id="buttonValidar" mnemonicParsing="false" onAction="#activarCuenta" style="-fx-background-color: #0edfc0;" text="Activar Cuenta">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Button>
+         </children>
+      </HBox>
    </children>
-</AnchorPane>
+</VBox>

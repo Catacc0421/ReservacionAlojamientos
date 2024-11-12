@@ -1,20 +1,13 @@
 package co.edu.uniquindio.reservacionAlojamientos.controladores;
 
 import co.edu.uniquindio.reservacionAlojamientos.modelo.Alojamiento;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.ImageTableCell;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.ReservaPrincipal;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.enums.TipoAlojamiento;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
@@ -26,7 +19,7 @@ public class InicioControlador implements Initializable {
     @FXML
     private TextField txtNombre;
     @FXML
-    private ComboBox<String> comboBoxTipo;
+    private ComboBox<TipoAlojamiento> comboBoxTipo;
     @FXML
     private ChoiceBox<String> chooseCiudad;
 
@@ -55,9 +48,9 @@ public class InicioControlador implements Initializable {
 
     private ObservableList<Alojamiento> alojamientosObservable;
 
-    private final ReservaPrincipal reservaPrincipal;
-    public InicioControlador(){
-        reservaPrincipal = ReservaPrincipal.getInstancia();
+    private final ControladorPrincipal controladorPrincipal;
+    public InicioControlador() {
+        controladorPrincipal = ControladorPrincipal.getInstancia();
     }
 
     @Override
@@ -69,11 +62,11 @@ public class InicioControlador implements Initializable {
         colDescripcion.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescripcion()));
         colImagen.setCellValueFactory(cellData -> new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().getImage()));
         colServicios.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getServiciosIncluidos().toString()));
-        colTipoAlojamiento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipoAlojamiento().toString()));
+        //colTipoAlojamiento.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTipoAlojamiento().toString()));
 
         //Cargar categorias en el ComboBox
-        comboBoxTipo.setItems( FXCollections.observableList(reservaPrincipal.listarTiposAlojamientos()) );
-        chooseCiudad.setItems (FXCollections.observableList(reservaPrincipal.listarCiudades()));
+        comboBoxTipo.setItems( FXCollections.observableList(controladorPrincipal.listarTiposAlojamientos()) );
+        chooseCiudad.setItems (FXCollections.observableList(controladorPrincipal.listarCiudades()));
 
         //Inicializar lista observable y cargar las notas
         alojamientosObservable = FXCollections.observableArrayList();
@@ -82,58 +75,30 @@ public class InicioControlador implements Initializable {
     }
 
     private void cargarAlojamientos() {
-        alojamientosObservable.setAll(reservaPrincipal.listarAlojamientos());
+        alojamientosObservable.setAll(controladorPrincipal.listarAlojamientos());
         tablaBusqueda.setItems(alojamientosObservable);
     }
 
     public void iniciarSesion() {
-        navegarVentana("/IniciarSesion.fxml", "Iniciar sesión");
-        cerrarVentana(buttonRegistrarse);
+        controladorPrincipal.navegarVentana("/IniciarSesion.fxml", "Iniciar sesión");
+        controladorPrincipal.cerrarVentana(buttonRegistrarse);
     }
 
     public void registrarse() {
-        navegarVentana("/Registro.fxml", "Registro");
-        cerrarVentana(buttonRegistrarse);
-    }
-
-    public void cerrarVentana(Node node) {
-        Stage stage = (Stage) node.getScene().getWindow();
-        stage.close();
+        controladorPrincipal.navegarVentana("/Registro.fxml", "Registro");
+        controladorPrincipal.cerrarVentana(buttonRegistrarse);
     }
     public void buscarAlojamientos() {
         String nombre = txtNombre.getText();
         String ciudad = chooseCiudad.getValue();
-        String tipo = comboBoxTipo.getValue();
+        TipoAlojamiento tipo = comboBoxTipo.getValue();
 
-        List<Alojamiento> alojamientosFiltrados = reservaPrincipal.buscarAlojamientos(nombre, ciudad, tipo);
+        List<Alojamiento> alojamientosFiltrados = controladorPrincipal.buscarAlojamientos(nombre, ciudad, tipo);
         tablaBusqueda.setItems(FXCollections.observableArrayList(alojamientosFiltrados));
         limpiarCampos();
     }
 
-    public FXMLLoader navegarVentana(String nombreArchivoFxml, String tituloVentana) {
-        try {
-            // Cargar la vista
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
-            Parent root = loader.load();
 
-            // Crear la escena
-            Scene scene = new Scene(root);
-
-            // Crear un nuevo escenario (ventana)
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.setTitle(tituloVentana);
-
-            // Mostrar la nueva ventana
-            stage.show();
-            return loader;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
     private void limpiarCampos(){
         txtNombre.clear();
     }

@@ -30,9 +30,9 @@ public class IniciarSesionControlador {
     private static final String ADMIN_EMAIL = "administradorunico@gmail.com";
     private static final String ADMIN_PASSWORD = "12345admin";
 
-    private final ReservaPrincipal reservaPrincipal;
-    public IniciarSesionControlador(){
-        reservaPrincipal = ReservaPrincipal.getInstancia();
+    private final ControladorPrincipal controladorPrincipal;
+    public IniciarSesionControlador() {
+        controladorPrincipal = ControladorPrincipal.getInstancia();
     }
     public void iniciarSesion(ActionEvent event) {
         String email = txtEmail.getText();
@@ -45,95 +45,61 @@ public class IniciarSesionControlador {
                 // Verificar si el correo y la contraseña son del administrador
                 if (email.equals(ADMIN_EMAIL) && contrasena.equals(ADMIN_PASSWORD)) {
                     // Redirigir al panel del administrador
-                    navegarVentana("/PanelAdministrador.fxml", "Panel Administrador");
+                    controladorPrincipal.navegarVentana("/PanelAdministrador.fxml", "Panel Administrador");
                 } else {
-                    mostrarAlerta("Error de acceso", "Las credenciales de administrador son incorrectas.");
+                    controladorPrincipal.mostrarAlerta("Error de acceso, Las credenciales de administrador son incorrectas.", Alert.AlertType.ERROR);
                 }
             } else {
                 // Intentar iniciar sesión como usuario normal
-                Usuario usuario = reservaPrincipal.iniciarSesion(email, contrasena);
+                Usuario usuario = controladorPrincipal.iniciarSesion(email, contrasena);
                 Sesion.getInstanciaSesion().setUsuario(usuario);
                 if (!usuario.isActivo()) {
-                    navegarVentana("/ActivacionCuenta.fxml", "Activación de cuenta");
+                    controladorPrincipal.navegarVentana("/ActivacionCuenta.fxml", "Activación de cuenta");
                 }else{
                     if (usuario != null) {
                         // Redirigir al panel de usuario común
-                        navegarVentana("/PanelUsuario.fxml", "Panel Cliente");
+                        controladorPrincipal.navegarVentana("/PanelUsuario.fxml", "Panel Cliente");
                     } else {
-                        mostrarAlerta("Error de acceso", "Correo o contraseña incorrectos.");
+                        controladorPrincipal.mostrarAlerta("Error de acceso, Correo o contraseña incorrectos.", Alert.AlertType.ERROR );
                     }
                 }
 
             }
         } catch (Exception e) {
-            mostrarAlerta("Error de inicio de sesión", e.getMessage());
+            controladorPrincipal.mostrarAlerta("Error de inicio de sesión", Alert.AlertType.valueOf(e.getMessage()));
         }
     }
-    private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-    public FXMLLoader navegarVentana(String nombreArchivoFxml, String tituloVentana){
-        try {
-            // Cargar la vista
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
-            Parent root = loader.load();
 
-            // Crear la escena
-            Scene scene = new Scene(root);
-
-            // Crear un nuevo escenario (ventana)
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.setTitle(tituloVentana);
-
-            // Mostrar la nueva ventana
-            stage.show();
-            return loader;
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return  null;
-        }
-
-    }
     public void volver() {
-        navegarVentana("/Inicio.fxml", "Inicio");
-        cerrarVentana(txtEmail);
+        controladorPrincipal.navegarVentana("/Inicio.fxml", "Inicio");
+        controladorPrincipal.cerrarVentana(txtEmail);
 
     }
     public void recuperarContrasena(){
         String email = txtEmail.getText().trim();
 
         if (email.isEmpty()) {
-            mostrarAlerta("Error", "Por favor, ingrese su correo electrónico.");
+            controladorPrincipal.mostrarAlerta("Por favor, ingrese su correo electrónico.", Alert.AlertType.ERROR);
             return;
         }
 
         try {
             // Generar un código aleatorio para cambiar la contraseña
-            String codigoRecuperacion = reservaPrincipal.generarCodigoRecuperacion();
+            String codigoRecuperacion = controladorPrincipal.generarCodigoRecuperacion();
 
             // Enviar el correo electrónico al usuario
-            reservaPrincipal.enviarEmailRecuperacion(email, codigoRecuperacion);
+            controladorPrincipal.enviarEmailRecuperacion(email, codigoRecuperacion);
 
             // Mostrar mensaje de éxito
-            mostrarAlerta("Correo Enviado", "Se ha enviado un correo electrónico con el código para cambiar la contraseña.");
+            controladorPrincipal.mostrarAlerta("Se ha enviado un correo electrónico con el código para cambiar la contraseña.", Alert.AlertType.INFORMATION);
 
         } catch (Exception e) {
-            mostrarAlerta("Error", "No se pudo enviar el correo electrónico. Inténtelo de nuevo más tarde.");
+            controladorPrincipal.mostrarAlerta("No se pudo enviar el correo electrónico. Inténtelo de nuevo más tarde.", Alert.AlertType.ERROR);
             e.printStackTrace();
         }
-        navegarVentana("/RecuperarContrasena.fxml", "Recuperacion de contraseña");
+        controladorPrincipal.navegarVentana("/RecuperarContrasena.fxml", "Recuperacion de contraseña");
     }
-    public void cerrarVentana(Node node) {
-        Stage stage = (Stage) node.getScene().getWindow();
-        stage.close();
-    }
+
     }
 
 

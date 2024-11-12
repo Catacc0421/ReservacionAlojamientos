@@ -1,5 +1,6 @@
-package co.edu.uniquindio.reservacionAlojamientos.modelo;
+package co.edu.uniquindio.reservacionAlojamientos.controladores;
 
+import co.edu.uniquindio.reservacionAlojamientos.modelo.Alojamiento;
 import javafx.scene.control.TableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

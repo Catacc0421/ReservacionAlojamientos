@@ -16,4 +16,5 @@ public class Usuario {
     private String contrasena;
     private String codigoActivacion;
     private boolean activo;
+    private BilleteraVirtual billeteraVirtual;
 }

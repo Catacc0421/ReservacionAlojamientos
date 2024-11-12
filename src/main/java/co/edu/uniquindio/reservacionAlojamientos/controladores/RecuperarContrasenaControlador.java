@@ -5,47 +5,32 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class RecuperarContrasenaControlador {
     @FXML
-    private TextField txtCodigoRecuperacion;
+    private TextField txtCodigoActivacion;
+    @FXML
+    private TextField txtCorreoElectronico;
 
     @FXML
-    private PasswordField txtNuevaContraseña;
+    private PasswordField txtContrasenaNueva;
 
-    private final ReservaPrincipal reservaPrincipal;
-    public RecuperarContrasenaControlador(){
-        reservaPrincipal = ReservaPrincipal.getInstancia();
+
+    private final ControladorPrincipal controladorPrincipal;
+    public RecuperarContrasenaControlador() {
+        controladorPrincipal = ControladorPrincipal.getInstancia();
     }
     public void volver() {
-        navegarVentana("/IniciarSesion.fxml", "Inicio");
+        controladorPrincipal.navegarVentana("/IniciarSesion.fxml", "Inicio");
+        controladorPrincipal.cerrarVentana(txtCorreoElectronico);
     }
-    public FXMLLoader navegarVentana(String nombreArchivoFxml, String tituloVentana){
-        try {
-            // Cargar la vista
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
-            Parent root = loader.load();
-
-            // Crear la escena
-            Scene scene = new Scene(root);
-
-            // Crear un nuevo escenario (ventana)
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.setTitle(tituloVentana);
-
-            // Mostrar la nueva ventana
-            stage.show();
-            return loader;
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return  null;
-        }
+    public void actualizarContrasena() {
 
     }
-}
+
+    }
+

@@ -25,14 +25,14 @@ public class RegistroControlador {
     @FXML
     private PasswordField txtContrasena;
 
-    private final ReservaPrincipal reservaPrincipal;
-    public RegistroControlador(){
-        reservaPrincipal = ReservaPrincipal.getInstancia();
+    private final ControladorPrincipal controladorPrincipal;
+    public RegistroControlador() {
+        controladorPrincipal = ControladorPrincipal.getInstancia();
     }
 
     public void realizarRegistro() {
         try {
-            reservaPrincipal.registrarUsuario(
+            controladorPrincipal.registrarUsuario(
                     txtCedula.getText(),
                     txtNombre.getText(),
                     txtTelefono.getText(),
@@ -41,52 +41,16 @@ public class RegistroControlador {
             );
 
             limpiarCampos();
-            mostrarAlerta("Usted se ha registrado con éxito a BookYourStay", Alert.AlertType.INFORMATION);
+            controladorPrincipal.mostrarAlerta("Usted se ha registrado con éxito a BookYourStay", Alert.AlertType.INFORMATION);
         } catch (Exception ex) {
-            mostrarAlerta(ex.getMessage(), Alert.AlertType.ERROR);
+            controladorPrincipal.mostrarAlerta(ex.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
         public void volver() {
-            navegarVentana("/inicio.fxml", "Inicio");
-            cerrarVentana(txtEmail);
+            controladorPrincipal.navegarVentana("/inicio.fxml", "Inicio");
+            controladorPrincipal.cerrarVentana(txtEmail);
         }
-    private void mostrarAlerta(String mensaje, Alert.AlertType tipo){
-        Alert alert = new Alert(tipo);
-        alert.setTitle("Información");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.show();
-    }
-    public void cerrarVentana(Node node){
-        Stage stage = (Stage) node.getScene().getWindow();
-        stage.close();
-    }
-    public FXMLLoader navegarVentana(String nombreArchivoFxml, String tituloVentana){
-        try {
-            // Cargar la vista
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(nombreArchivoFxml));
-            Parent root = loader.load();
-
-            // Crear la escena
-            Scene scene = new Scene(root);
-
-            // Crear un nuevo escenario (ventana)
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.setResizable(false);
-            stage.setTitle(tituloVentana);
-
-            // Mostrar la nueva ventana
-            stage.show();
-            return loader;
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return  null;
-        }
-
-    }
     private void limpiarCampos(){
         txtNombre.clear();
         txtCedula.clear();
