@@ -111,7 +111,7 @@ public class ReservaPrincipal implements ReservaServicios {
                 return usuario;
             }
         }
-        return null;
+        throw new Exception("EL usuario no existe"); //tener presente que acá había un null
     }
     //Método que permite obtener un usuario con su email en la lista de usuarios
     public Usuario obtenerUsuarioEmail(String email) throws Exception {
@@ -120,7 +120,7 @@ public class ReservaPrincipal implements ReservaServicios {
                 return usuario;
             }
         }
-        return null;
+        throw new Exception("EL usuario no existe"); //tener presente que acá había un null
     }
     //Método que permite listar las ciudades disponibles
     @Override
@@ -174,7 +174,12 @@ public class ReservaPrincipal implements ReservaServicios {
     Método que permite enviar un email con el código de recuperación para el cambio de su contraseña
      */
     @Override
-    public void enviarEmailRecuperacion(String email, String codigoRecuperacion) throws Exception {
+    public void enviarEmailRecuperacion(String email) throws Exception {
+        String codigoRecuperacion = generarCodigoRecuperacion();
+
+        Usuario usuario = obtenerUsuarioEmail(email);
+        usuario.setCodigoRecuperacionPassword(codigoRecuperacion); //Queda guardado?
+
         String mensaje = "" +
                 "Para cambiar su contraseña copie este código en la ventana de recuperación.\nCódigo de cambio de contraseña: " + codigoRecuperacion;
 
@@ -183,7 +188,17 @@ public class ReservaPrincipal implements ReservaServicios {
     }
     @Override
     public boolean actualizarContrasena(String email, String codigoRecuperacion, String nuevaContrasena) throws Exception {
-        return false;
+        Usuario usuario = obtenerUsuarioEmail(email);
+        System.out.println(usuario);
+        if (usuario.isActivo()) {
+            if (usuario.getCodigoRecuperacionPassword().equals(codigoRecuperacion)) {
+                usuario.setContrasena(nuevaContrasena);
+                return true;
+            }else{
+                throw new Exception("El código de validación es incorrecto.");
+            }
+        }
+        throw new Exception("El usuario no se encuentra activo.");
     }
 
 }

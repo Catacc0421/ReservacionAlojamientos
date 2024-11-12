@@ -22,7 +22,7 @@ public interface ReservaServicios {
     ArrayList<TipoAlojamiento> listarTiposAlojamientos();
     List<Alojamiento> buscarAlojamientos(String nombre, String ciudad, TipoAlojamiento tipo);
     String generarCodigoRecuperacion();
-    void enviarEmailRecuperacion(String email, String codigoRecuperacion) throws Exception;
+    void enviarEmailRecuperacion(String email) throws Exception;
 
     boolean actualizarContrasena(String correo, String nuevaContrasena, String codigoVerificacion) throws Exception;
 }

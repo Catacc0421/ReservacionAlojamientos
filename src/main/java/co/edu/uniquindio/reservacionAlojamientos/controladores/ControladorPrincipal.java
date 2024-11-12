@@ -107,12 +107,12 @@ public class ControladorPrincipal implements ReservaServicios {
     }
 
     @Override
-    public void enviarEmailRecuperacion(String email, String codigoRecuperacion) throws Exception {
-        reservaPrincipal.enviarEmailRecuperacion(email, codigoRecuperacion);
+    public void enviarEmailRecuperacion(String email) throws Exception {
+        reservaPrincipal.enviarEmailRecuperacion(email);
     }
 
     @Override
-    public boolean actualizarContrasena(String correo, String nuevaContrasena, String codigoVerificacion) throws Exception {
-        return reservaPrincipal.actualizarContrasena(correo, nuevaContrasena, codigoVerificacion);
+    public boolean actualizarContrasena(String correo, String codigoVerificacion, String nuevaContrasena) throws Exception {
+        return reservaPrincipal.actualizarContrasena(correo, codigoVerificacion, nuevaContrasena);
     }
 }

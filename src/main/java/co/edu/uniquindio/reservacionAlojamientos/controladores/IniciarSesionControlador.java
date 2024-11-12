@@ -84,11 +84,9 @@ public class IniciarSesionControlador {
         }
 
         try {
-            // Generar un código aleatorio para cambiar la contraseña
-            String codigoRecuperacion = controladorPrincipal.generarCodigoRecuperacion();
 
             // Enviar el correo electrónico al usuario
-            controladorPrincipal.enviarEmailRecuperacion(email, codigoRecuperacion);
+            controladorPrincipal.enviarEmailRecuperacion(email);
 
             // Mostrar mensaje de éxito
             controladorPrincipal.mostrarAlerta("Se ha enviado un correo electrónico con el código para cambiar la contraseña.", Alert.AlertType.INFORMATION);

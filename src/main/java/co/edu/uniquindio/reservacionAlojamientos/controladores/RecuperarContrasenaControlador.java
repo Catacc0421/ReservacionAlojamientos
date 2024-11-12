@@ -29,7 +29,19 @@ public class RecuperarContrasenaControlador {
         controladorPrincipal.cerrarVentana(txtCorreoElectronico);
     }
     public void actualizarContrasena() {
-
+        String correo = txtCorreoElectronico.getText();
+        String nueva = txtContrasenaNueva.getText();
+        String codigo = txtCodigoActivacion.getText();
+        try {
+            boolean exito = controladorPrincipal.actualizarContrasena(correo, codigo, nueva);
+            if(exito){
+                volver();
+            }else{
+                controladorPrincipal.mostrarAlerta("No se pudo actualizar la contraseña", Alert.AlertType.ERROR);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     }
