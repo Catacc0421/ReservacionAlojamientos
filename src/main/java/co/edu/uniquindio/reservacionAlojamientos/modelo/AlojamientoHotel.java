@@ -1,9 +1,5 @@
-package co.edu.uniquindio.reservacionAlojamientos.factory;
+package co.edu.uniquindio.reservacionAlojamientos.modelo;
 
-import co.edu.uniquindio.reservacionAlojamientos.modelo.Alojamiento;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.Habitacion;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.OfertaEstancia;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.OfertaRangoFechas;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.enums.TipoServicio;
 import lombok.Builder;
 import lombok.Getter;
