@@ -1,4 +1,4 @@
-package co.edu.uniquindio.reservacionAlojamientos.factory;
+package co.edu.uniquindio.reservacionAlojamientos.modelo.factory;
 
 import co.edu.uniquindio.reservacionAlojamientos.modelo.Alojamiento;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.Habitacion;

@@ -1,12 +1,9 @@
 package co.edu.uniquindio.reservacionAlojamientos.servicios;
 
-import co.edu.uniquindio.reservacionAlojamientos.factory.AlojamientoApartamento;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.Alojamiento;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.Habitacion;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.Usuario;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.enums.TipoAlojamiento;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
