@@ -19,7 +19,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -60,37 +59,55 @@
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <StackPane prefHeight="602.0" prefWidth="758.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="326.0" prefWidth="1117.0" style="-fx-spacing: 30;">
                            <children>
-                              <VBox prefHeight="200.0" prefWidth="100.0">
+                              <GridPane alignment="CENTER_LEFT">
+                                <columnConstraints>
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                              </GridPane>
+                              <VBox alignment="CENTER" prefHeight="315.0" prefWidth="327.0" style="-fx-spacing: 30;">
                                  <children>
-                                    <HBox prefHeight="581.0" prefWidth="1117.0">
-                                       <children>
-                                          <VBox prefHeight="582.0" prefWidth="222.0" style="-fx-spacing: 50;">
-                                             <children>
-                                                <Button mnemonicParsing="false" prefHeight="158.0" prefWidth="222.0" style="-fx-background-color: #c4f39b;" text="CREAR HOTEL" wrapText="true">
-                                                   <font>
-                                                      <Font size="25.0" />
-                                                   </font>
-                                                </Button>
-                                                <Button mnemonicParsing="false" prefHeight="154.0" prefWidth="255.0" style="-fx-background-color: #c4f39b;" text="CREAR APARTAMENTO" textAlignment="CENTER" wrapText="true">
-                                                   <font>
-                                                      <Font size="25.0" />
-                                                   </font>
-                                                </Button>
-                                                <Button mnemonicParsing="false" prefHeight="143.0" prefWidth="229.0" style="-fx-background-color: #c4f39b;" text="CREAR CASA" wrapText="true">
-                                                   <font>
-                                                      <Font size="25.0" />
-                                                   </font>
-                                                </Button>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </HBox>
+                                    <Button mnemonicParsing="false" prefHeight="67.0" prefWidth="196.0" text="Agregar Alojamiento">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                    <Button mnemonicParsing="false" prefHeight="67.0" prefWidth="201.0" text="Editar Alojamiento">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
+                                    <Button mnemonicParsing="false" prefHeight="68.0" prefWidth="202.0" text="Eliminar Alojamiento">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </Button>
                                  </children>
                               </VBox>
                            </children>
-                        </StackPane>
+                        </HBox>
+                        <TableView prefHeight="266.0" prefWidth="1117.0">
+                          <columns>
+                            <TableColumn prefWidth="98.39999389648438" text="C1" />
+                            <TableColumn prefWidth="73.60000610351562" text="C2" />
+                              <TableColumn prefWidth="84.0" text="Column X" />
+                              <TableColumn prefWidth="90.4000244140625" text="Column X" />
+                              <TableColumn prefWidth="81.60003662109375" text="Column X" />
+                              <TableColumn prefWidth="119.99996948242188" text="Column X" />
+                              <TableColumn prefWidth="105.5999755859375" text="Column X" />
+                              <TableColumn prefWidth="116.79998779296875" text="Column X" />
+                              <TableColumn prefWidth="113.5999755859375" text="Column X" />
+                              <TableColumn prefWidth="112.79998779296875" text="Column X" />
+                              <TableColumn prefWidth="126.4000244140625" text="Column X" />
+                          </columns>
+                        </TableView>
                      </children>
                   </VBox>
                </content></Tab>
@@ -112,15 +129,21 @@
                                      <NumberAxis label="Porcentaje / Ganancia Total" />
                                  </yAxis>
                              </BarChart>
-                           <VBox alignment="CENTER" prefHeight="308.0" prefWidth="253.0">
+                           <VBox alignment="CENTER" prefHeight="308.0" prefWidth="253.0" style="-fx-spacing: 30;">
                               <children>
+                                 <ComboBox prefWidth="150.0" promptText="Tipo de alojamiento" />
                                    <Button alignment="TOP_LEFT" onAction="#actualizarOcupacionGanancias" text="Actualizar Ocupación y Ganancias" />
                               </children>
                            </VBox>
                          </HBox>
                          <HBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="1117.0" spacing="10">
                              <PieChart fx:id="pieChartPopularidad" prefHeight="105.0" prefWidth="500.0" title="Alojamientos más Populares" />
-                             <Button onAction="#actualizarPopularidadAlojamientos" text="Actualizar Popularidad" />
+                           <VBox alignment="CENTER" prefHeight="171.0" prefWidth="205.0" style="-fx-spacing: 30;">
+                              <children>
+                                 <ComboBox prefWidth="150.0" promptText="Tipo de alojamiento" />
+                                   <Button onAction="#actualizarPopularidadAlojamientos" text="Actualizar Popularidad" />
+                              </children>
+                           </VBox>
                          </HBox>
 
                          <!-- Rentabilidad por Tipo de Alojamiento -->
