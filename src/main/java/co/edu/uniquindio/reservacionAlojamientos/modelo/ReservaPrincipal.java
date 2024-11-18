@@ -7,12 +7,11 @@ import co.edu.uniquindio.reservacionAlojamientos.modelo.factory.AlojamientoCasa;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.factory.AlojamientoHotel;
 import co.edu.uniquindio.reservacionAlojamientos.servicios.ReservaServicios;
 import co.edu.uniquindio.reservacionAlojamientos.utils.EnvioEmail;
+import java.time.temporal.ChronoUnit;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReservaPrincipal implements ReservaServicios {
@@ -154,6 +153,14 @@ public class ReservaPrincipal implements ReservaServicios {
         ciudades.add("ARMENIA");
         ciudades.add("PALMIRA");
         return ciudades;
+
+    }
+    @Override
+    public ArrayList<String> listarOfertas(){
+        ArrayList<String> ofertas= new ArrayList<>();
+        ofertas.add("ESTANCIA");
+        ofertas.add("RANGO_FECHAS");
+        return ofertas;
 
     }
     @Override
@@ -454,7 +461,7 @@ public class ReservaPrincipal implements ReservaServicios {
         double costoAseo = 0;
         double costoMantenimiento = 0;
         double precioPorNoche = 0;
-        long diasEstancia = fechaInicio.until(fechaFin).getDays();
+        long diasEstancia = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
 
         // Si es una Casa o Apartamento, obtenemos el precio de la clase correspondiente
         if (alojamiento instanceof AlojamientoCasa) {
@@ -479,6 +486,11 @@ public class ReservaPrincipal implements ReservaServicios {
 
         // Calcular el costo total
         double costoTotal = (precioPorNoche * diasEstancia) + costoAseo + costoMantenimiento;
+
+        // Calcular el descuento por ofertas especiales
+        double descuento = calcularDescuento(alojamiento, fechaInicio, fechaFin);
+        double montoDescuento = (costoTotal * descuento) / 100;
+        costoTotal -= montoDescuento; // Aplicar el descuento al costo total
 
         // Verificar que el usuario tenga suficiente saldo en su billetera virtual
         if (!usuario.getBilleteraVirtual().tieneSuficienteSaldo(costoTotal)) {
@@ -511,6 +523,7 @@ public class ReservaPrincipal implements ReservaServicios {
                         "Costo por Noche: $%.2f\n" +
                         "Costo Aseo: $%.2f\n" +
                         "Costo Mantenimiento: $%.2f\n" +
+                        "Descuento Aplicado: $%.2f\n" +
                         "Costo Total: $%.2f\n\n" +
                         "Gracias por utilizar nuestro sistema de reservas.\n" +
                         "Atentamente,\nEl equipo de Reservas",
@@ -521,6 +534,7 @@ public class ReservaPrincipal implements ReservaServicios {
                 precioPorNoche,
                 costoAseo,
                 costoMantenimiento,
+                montoDescuento,
                 costoTotal
         );
 
@@ -703,5 +717,111 @@ public class ReservaPrincipal implements ReservaServicios {
         // Eliminar las reservas asociadas al usuario
         reservas.removeIf(reserva -> reserva.getUsuario().equals(usuario));
     }
+    private Map<Alojamiento, List<Object>> ofertasEspeciales = new HashMap<>();
+    @Override
+    public void agregarOfertaEspecial(Alojamiento alojamiento, Object oferta) throws Exception {
+        if (alojamiento == null) {
+            throw new Exception("El alojamiento no puede ser nulo.");
+        }
+        if (oferta == null) {
+            throw new Exception("La oferta no puede ser nula.");
+        }
+        if (!(oferta instanceof OfertaEstancia || oferta instanceof OfertaRangoFechas)) {
+            throw new Exception("El tipo de oferta no es válido.");
+        }
+
+        // Si el alojamiento no tiene ofertas registradas, inicializamos la lista
+        ofertasEspeciales.putIfAbsent(alojamiento, new ArrayList<>());
+
+        // Agregamos la oferta a la lista correspondiente
+        ofertasEspeciales.get(alojamiento).add(oferta);
+    }
+    public double calcularDescuento(Alojamiento alojamiento, LocalDate fechaInicio, LocalDate fechaFin) {
+        if (!ofertasEspeciales.containsKey(alojamiento)) {
+            return 0; // No hay ofertas asociadas al alojamiento
+        }
+
+        double descuentoTotal = 0;
+        List<Object> ofertas = ofertasEspeciales.get(alojamiento);
+
+        for (Object oferta : ofertas) {
+            if (oferta instanceof OfertaEstancia) {
+                OfertaEstancia ofertaEstancia = (OfertaEstancia) oferta;
+                long diasEstancia = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
+                if (diasEstancia >= ofertaEstancia.getNumeroDias()) {
+                    descuentoTotal += ofertaEstancia.getDescuento();
+                }
+            } else if (oferta instanceof OfertaRangoFechas) {
+                OfertaRangoFechas ofertaRangoFechas = (OfertaRangoFechas) oferta;
+                // Verificar si las fechas de la reserva coinciden con el rango de la oferta
+                if (!fechaInicio.isAfter(ofertaRangoFechas.getFechaFin()) &&
+                        !fechaFin.isBefore(ofertaRangoFechas.getFechaInicio())) {
+                    descuentoTotal += ofertaRangoFechas.getPorcentajeDescuento();
+                }
+            }
+        }
+
+        return descuentoTotal; // Porcentaje total acumulado
+    }
+    @Override
+    public boolean eliminarOferta(Alojamiento alojamiento, String tipoOferta) {
+        // Validar que el alojamiento no sea nulo
+        if (alojamiento == null) {
+            throw new IllegalArgumentException("El alojamiento no puede ser nulo.");
+        }
+
+        // Buscar y eliminar la oferta según su tipo
+        switch (tipoOferta.toUpperCase()) {
+            case "ESTANCIA":
+                if (alojamiento.getOfertaEstancia() != null) {
+                    alojamiento.setOfertaEstancia(null);
+                    return true; // Eliminada exitosamente
+                }
+                break;
+
+            case "RANGO_FECHAS":
+                if (alojamiento.getOfertaRangoFechas() != null) {
+                    alojamiento.setOfertaRangoFechas(null);
+                    return true; // Eliminada exitosamente
+                }
+                break;
+
+            default:
+                throw new IllegalArgumentException("Tipo de oferta no válido: " + tipoOferta);
+        }
+
+        return false; // No se encontró la oferta
+    }
+    @Override
+    public boolean editarOferta(Alojamiento alojamiento, String tipoOferta, Object nuevaOferta) {
+        // Validar que el alojamiento y la nueva oferta no sean nulos
+        if (alojamiento == null || nuevaOferta == null) {
+            throw new IllegalArgumentException("El alojamiento y la nueva oferta no pueden ser nulos.");
+        }
+
+        // Editar la oferta según su tipo
+        switch (tipoOferta.toUpperCase()) {
+            case "ESTANCIA":
+                if (nuevaOferta instanceof OfertaEstancia) {
+                    alojamiento.setOfertaEstancia((OfertaEstancia) nuevaOferta);
+                    return true; // Editada exitosamente
+                }
+                break;
+
+            case "RANGO_FECHAS":
+                if (nuevaOferta instanceof OfertaRangoFechas) {
+                    alojamiento.setOfertaRangoFechas((OfertaRangoFechas) nuevaOferta);
+                    return true; // Editada exitosamente
+                }
+                break;
+
+            default:
+                throw new IllegalArgumentException("Tipo de oferta no válido: " + tipoOferta);
+        }
+
+        return false; // No se pudo editar
+    }
+
+
 
 }

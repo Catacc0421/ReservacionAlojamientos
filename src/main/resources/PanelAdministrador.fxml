@@ -245,7 +245,7 @@
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <HBox alignment="CENTER" prefHeight="225.0" prefWidth="1157.0" style="-fx-spacing: 60;">
+                        <HBox alignment="CENTER" prefHeight="374.0" prefWidth="1434.0" style="-fx-spacing: 60;">
                            <children>
                               <GridPane prefHeight="226.0" prefWidth="406.0">
                                 <columnConstraints>
@@ -254,6 +254,7 @@
                                 </columnConstraints>
                                 <rowConstraints>
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -261,15 +262,17 @@
                                 </rowConstraints>
                                  <children>
                                     <Label text="Tipo de oferta especial:" />
-                                    <Label text="Descuento:" GridPane.rowIndex="1" />
-                                    <Label text="Número de días" GridPane.rowIndex="2" />
-                                    <Label text="Fecha inicio de la oferta:" GridPane.rowIndex="3" />
-                                    <Label text="Fecha fin de la oferta:" GridPane.rowIndex="4" />
+                                    <Label text="Descuento:" GridPane.rowIndex="2" />
+                                    <Label text="Número de días" GridPane.rowIndex="3" />
+                                    <Label text="Fecha inicio de la oferta:" GridPane.rowIndex="4" />
+                                    <Label text="Fecha fin de la oferta:" GridPane.rowIndex="5" />
                                     <ComboBox fx:id="cbTipoOferta" prefHeight="26.0" prefWidth="236.0" GridPane.columnIndex="1" />
-                                    <TextField fx:id="txtDescuentoOferta" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <TextField fx:id="txtNumeroDias" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <DatePicker fx:id="dpInicioOferta" prefHeight="31.0" prefWidth="203.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <DatePicker fx:id="dpFinOferta" prefHeight="30.0" prefWidth="203.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <TextField fx:id="txtDescuentoOferta" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <TextField fx:id="txtNumeroDias" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <DatePicker fx:id="dpInicioOferta" prefHeight="31.0" prefWidth="203.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <DatePicker fx:id="dpFinOferta" prefHeight="30.0" prefWidth="203.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                    <Label text="Alojamiento: " GridPane.rowIndex="1" />
+                                    <ComboBox fx:id="cbAlojamientos" prefHeight="26.0" prefWidth="214.0" promptText="Lista de lojamientos" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                  </children>
                               </GridPane>
                               <VBox alignment="CENTER" prefHeight="226.0" prefWidth="218.0" style="-fx-spacing: 30;">

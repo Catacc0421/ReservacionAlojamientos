@@ -30,6 +30,8 @@ public class PanelUsuarioControlador implements Initializable, Observer {
     private ComboBox<String> cbRangoPrecios;
     @FXML
     private ComboBox<Habitacion> cbListarHabitaciones;
+    @FXML
+    private Button btEliminar;
 
     @FXML
     private ChoiceBox<String> chooseCiudad;
@@ -313,11 +315,10 @@ public class PanelUsuarioControlador implements Initializable, Observer {
         });
 
         // Aquí se configura el resto de las columnas (como colEstado, colFechaInicio, etc.)
-        colEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstado()));
-        colFechaInicio.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getFechaInicio()).asString());
-        colFechaFin.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getFechaFin()).asString());
-        colNumeroHuespedes.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getNumeroHuespedes()).asObject().asString());
-
+        colFechaInicio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFechaInicio().toString()));
+        colFechaFin.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFechaFin().toString()));
+        colNumeroHuespedes.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getNumeroHuespedes())));
+        colEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstado().toString()));
         lbNombreUsuario.setText( usuarioActual.getNombreCompleto() + "   Bienvenido al panel de usuario de BookYourStayAlojamientos " );
         lbSaldoBilletera.setText( "Su monto actual es: " + usuarioActual.getBilleteraVirtual().getSaldo());
     }
@@ -400,6 +401,7 @@ public class PanelUsuarioControlador implements Initializable, Observer {
 
             // Llamar al método cancelarReserva de la clase ReservaPrincipal
             controladorPrincipal.cancelarReserva(reservaSeleccionada);
+            notificar();
 
             // Notificar al usuario que la reserva ha sido cancelada
             controladorPrincipal.mostrarAlerta("La reserva ha sido cancelada con éxito.", Alert.AlertType.INFORMATION);
@@ -423,33 +425,52 @@ public class PanelUsuarioControlador implements Initializable, Observer {
     @FXML
     void hacerReserva(ActionEvent event) {
         try {
-            // Verificar que se haya seleccionado una habitación si es un hotel
+            // Validar si el alojamiento es un hotel y si se seleccionó una habitación
+            Habitacion habitacionSeleccionada = null;
             if (alojamientoSeleccionado instanceof AlojamientoHotel) {
-                Habitacion habitacionSeleccionada = cbListarHabitaciones.getSelectionModel().getSelectedItem();
+                habitacionSeleccionada = cbListarHabitaciones.getSelectionModel().getSelectedItem();
                 if (habitacionSeleccionada == null) {
                     controladorPrincipal.mostrarAlerta("Por favor seleccione una habitación para hacer la reserva.", Alert.AlertType.WARNING);
                     return;
                 }
             }
 
-            // Verificar que la fecha y el número de huéspedes estén completos
+            // Validar fechas y número de huéspedes
             LocalDate fechaInicio = dpFechaInicio.getValue();
-            LocalDate fechaFin = dpFechaFin.getValue(); // Asegúrate de tener este campo para la fecha de fin
-            int numeroHuespedes = Integer.parseInt(txtNumeroHuespedes.getText()); // El ComboBox para el número de huéspedes
-
-            if (fechaInicio == null || fechaFin == null || numeroHuespedes <= 0) {
-                controladorPrincipal.mostrarAlerta("Por favor complete todos los campos necesarios para la reserva", Alert.AlertType.WARNING);
+            LocalDate fechaFin = dpFechaFin.getValue();
+            if (fechaInicio == null || fechaFin == null || fechaInicio.isAfter(fechaFin)) {
+                controladorPrincipal.mostrarAlerta("Por favor seleccione un rango de fechas válido.", Alert.AlertType.WARNING);
                 return;
             }
 
-            // Intentar realizar la reserva (necesitas tener un método para crear reservas)
-            controladorPrincipal.realizarReserva(usuarioActual, fechaInicio, fechaFin, alojamientoSeleccionado, numeroHuespedes, habitacionSeleccionada);
-            // Notificar y mostrar mensaje de confirmación
+            int numeroHuespedes;
+            try {
+                numeroHuespedes = Integer.parseInt(txtNumeroHuespedes.getText());
+                if (numeroHuespedes <= 0) {
+                    throw new NumberFormatException("El número de huéspedes debe ser mayor a 0.");
+                }
+            } catch (NumberFormatException e) {
+                controladorPrincipal.mostrarAlerta("El número de huéspedes debe ser un valor numérico mayor a 0.", Alert.AlertType.WARNING);
+                return;
+            }
+
+            // Intentar realizar la reserva
+            controladorPrincipal.realizarReserva(
+                    usuarioActual,
+                    fechaInicio,
+                    fechaFin,
+                    alojamientoSeleccionado,
+                    numeroHuespedes,
+                    habitacionSeleccionada
+            );
+
+            // Notificar éxito, actualizar saldo e interfaz
             notificar();
             actualizarInterfazSaldo();
             controladorPrincipal.mostrarAlerta("Su reserva ha sido creada exitosamente. Verifique su correo para más detalles.", Alert.AlertType.INFORMATION);
 
         } catch (Exception e) {
+            // Manejar errores durante la reserva
             controladorPrincipal.mostrarAlerta("No se pudo realizar la reserva: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
@@ -510,6 +531,7 @@ public class PanelUsuarioControlador implements Initializable, Observer {
             if (cuentaActualizada) {
                 // Informar al usuario que los datos han sido actualizados
                 controladorPrincipal.mostrarAlerta("Los datos de su cuenta han sido actualizados correctamente.", Alert.AlertType.INFORMATION);
+                actualizarInterfazNombre();
             }
         } catch (Exception e) {
             // Mostrar mensaje de error en caso de que algo falle
@@ -525,6 +547,7 @@ public class PanelUsuarioControlador implements Initializable, Observer {
             if (cuentaEliminada) {
                 // Informar al usuario que su cuenta ha sido eliminada correctamente
                 controladorPrincipal.mostrarAlerta("Tu cuenta ha sido eliminada correctamente.", Alert.AlertType.INFORMATION);
+                controladorPrincipal.cerrarVentana(btEliminar);
             }
         } catch (Exception e) {
             // Mostrar mensaje de error en caso de que algo falle
@@ -532,17 +555,20 @@ public class PanelUsuarioControlador implements Initializable, Observer {
         }
 
     }
+    private void actualizarInterfazNombre(){
+        lbNombreUsuario.setText(usuarioActual.getNombreCompleto() + "   Bienvenido al panel de usuario de BookYourStayAlojamientos ");
+    }
     private void actualizarInterfazSaldo() {
         // Suponiendo que tienes una etiqueta que muestra el saldo de la billetera
         lbSaldoBilletera.setText("Saldo actual: $" + usuarioActual.getBilleteraVirtual().getSaldo());
     }
+
+    private void cargarReservas() {
+        reservasObservable.setAll(controladorPrincipal.listarReservasPorPersona(usuarioActual.getCedula()));
+    }
     @Override
     public void notificar() {
         cargarReservas();
-    }
-    private void cargarReservas() {
-        reservasObservable.setAll(controladorPrincipal.listarReservasPorPersona(usuarioActual.getCedula()));
-        tablaBusqueda.setItems(alojamientosObservable);
     }
     private void cargarHabitaciones() {
         cbListarHabitaciones.setItems(FXCollections.observableArrayList(habitaciones));

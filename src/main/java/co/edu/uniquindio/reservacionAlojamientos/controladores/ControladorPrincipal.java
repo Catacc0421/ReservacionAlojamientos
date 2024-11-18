@@ -160,6 +160,26 @@ public class ControladorPrincipal implements ReservaServicios {
     }
 
     @Override
+    public boolean eliminarOferta(Alojamiento alojamiento, String tipoOferta) {
+        return reservaPrincipal.eliminarOferta(alojamiento, tipoOferta);
+    }
+
+    @Override
+    public boolean editarOferta(Alojamiento alojamiento, String tipoOferta, Object nuevaOferta) {
+        return reservaPrincipal.editarOferta(alojamiento, tipoOferta, nuevaOferta);
+    }
+
+    @Override
+    public ArrayList<String> listarOfertas() {
+        return reservaPrincipal.listarOfertas();
+    }
+
+    @Override
+    public void agregarOfertaEspecial(Alojamiento alojamiento, Object oferta) throws Exception {
+        reservaPrincipal.agregarOfertaEspecial(alojamiento, oferta);
+    }
+
+    @Override
     public boolean editarCuenta(Usuario usuario, String nuevoNombreCompleto, String nuevoTelefono, String nuevoEmail) throws Exception {
         return reservaPrincipal.editarCuenta(usuario, nuevoNombreCompleto, nuevoTelefono, nuevoEmail);
     }

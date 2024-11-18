@@ -38,6 +38,10 @@ public interface ReservaServicios {
     Usuario obtenerUsuarioCedula(String cedula) throws Exception;
     void recargarBilletera(double monto, Usuario usuario) throws Exception;
     boolean eliminarCuenta(Usuario usuario) throws Exception;
+    boolean eliminarOferta(Alojamiento alojamiento, String tipoOferta);
+    boolean editarOferta(Alojamiento alojamiento, String tipoOferta, Object nuevaOferta);
+    ArrayList<String> listarOfertas();
+    void agregarOfertaEspecial(Alojamiento alojamiento, Object oferta) throws Exception;
     boolean editarCuenta(Usuario usuario, String nuevoNombreCompleto, String nuevoTelefono, String nuevoEmail) throws Exception;
     boolean editarAlojamiento(String id, String tipo, String nombre, String ciudad, String descripcion,
                                      List<TipoServicio> serviciosIncluidos, File imagen, Double costoAseo,
