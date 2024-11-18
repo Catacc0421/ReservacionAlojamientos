@@ -12,13 +12,14 @@ import lombok.Setter;
 import java.io.File;
 import java.util.List;
 
-@Getter
+
 @Setter
 public class AlojamientoHotel extends Alojamiento {
+    @Getter
     private List<Habitacion> habitaciones;
 
     @Builder
-    public AlojamientoHotel(String id, String nombreAlojamiento, String ciudad, String descripcion, File image, List<TipoServicio> serviciosIncluidos, OfertaEstancia ofertaEstancia, OfertaRangoFechas ofertaRangoFechas) {
+    public AlojamientoHotel(String id, String nombreAlojamiento, String ciudad, String descripcion, File image, List<TipoServicio> serviciosIncluidos, OfertaEstancia ofertaEstancia, OfertaRangoFechas ofertaRangoFechas, List<Habitacion> habitaciones) {
         super(id, nombreAlojamiento, ciudad, descripcion, image, serviciosIncluidos, ofertaEstancia, ofertaRangoFechas);
         this.habitaciones = habitaciones;
     }

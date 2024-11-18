@@ -12,7 +12,7 @@ public class ReservasApp extends Application {
         FXMLLoader loader = new FXMLLoader(ReservasApp.class.getResource("/Inicio.fxml"));
         Parent parent = loader.load();
 
-        Scene scene = new Scene(parent, 1200, 600);
+        Scene scene = new Scene(parent, 500, 600);
         stage.setScene(scene);
         stage.setTitle("Aplicación contactos");
         //stage.setResizable(false);

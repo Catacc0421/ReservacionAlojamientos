@@ -1,9 +1,8 @@
 package co.edu.uniquindio.reservacionAlojamientos.controladores;
 
-import co.edu.uniquindio.reservacionAlojamientos.modelo.Alojamiento;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.ReservaPrincipal;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.Usuario;
+import co.edu.uniquindio.reservacionAlojamientos.modelo.*;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.enums.TipoAlojamiento;
+import co.edu.uniquindio.reservacionAlojamientos.modelo.enums.TipoServicio;
 import co.edu.uniquindio.reservacionAlojamientos.servicios.ReservaServicios;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -13,8 +12,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ControladorPrincipal implements ReservaServicios {
 
@@ -75,6 +77,7 @@ public class ControladorPrincipal implements ReservaServicios {
 
     @Override
     public List<Alojamiento> listarAlojamientos() {
+
         return reservaPrincipal.listarAlojamientos();
     }
     @Override
@@ -97,8 +100,18 @@ public class ControladorPrincipal implements ReservaServicios {
     }
 
     @Override
-    public List<Alojamiento> buscarAlojamientos(String nombre, String ciudad, TipoAlojamiento tipo) {
-        return reservaPrincipal.buscarAlojamientos(nombre, ciudad, tipo);
+    public ArrayList<String> listarRangosPrecios() {
+        return reservaPrincipal.listarRangosPrecios();
+    }
+
+    @Override
+    public List<Habitacion> listarHabitaciones() {
+        return reservaPrincipal.listarHabitaciones();
+    }
+
+    @Override
+    public List<Alojamiento> buscarAlojamientos(String nombre, String ciudad, TipoAlojamiento tipo, Double precioMinCOP, Double precioMaxCOP) {
+        return reservaPrincipal.buscarAlojamientos(nombre, ciudad, tipo, precioMinCOP, precioMaxCOP);
     }
 
     @Override
@@ -112,7 +125,58 @@ public class ControladorPrincipal implements ReservaServicios {
     }
 
     @Override
+    public boolean agregarAlojamiento(String tipo, String nombre, String ciudad, String descripcion, List<TipoServicio> serviciosIncluidos, File imagen, Double costoAseo, Double costoMantenimiento, Double precioPorNoche, Integer capacidadMaxima, List<Habitacion> habitaciones) throws Exception {
+        return reservaPrincipal.agregarAlojamiento(tipo, nombre, ciudad, descripcion, serviciosIncluidos, imagen, costoAseo, costoMantenimiento, precioPorNoche, capacidadMaxima, habitaciones);
+    }
+
+    @Override
+    public void eliminarAlojamiento(String id) throws Exception {
+        reservaPrincipal.eliminarAlojamiento(id);
+    }
+
+    @Override
+    public List<Reserva> listarReservasPorPersona(String cedulaPersona) {
+        return reservaPrincipal.listarReservasPorPersona(cedulaPersona);
+    }
+
+    @Override
+    public void cancelarReserva(Reserva reserva) throws Exception {
+        reservaPrincipal.cancelarReserva(reserva);
+    }
+
+    @Override
+    public Usuario obtenerUsuarioCedula(String cedula) throws Exception {
+        return reservaPrincipal.obtenerUsuarioCedula(cedula);
+    }
+
+    @Override
+    public void recargarBilletera(double monto, Usuario usuario) throws Exception {
+        reservaPrincipal.recargarBilletera(monto, usuario);
+    }
+
+    @Override
+    public boolean eliminarCuenta(Usuario usuario) throws Exception {
+        return reservaPrincipal.eliminarCuenta(usuario);
+    }
+
+    @Override
+    public boolean editarCuenta(Usuario usuario, String nuevoNombreCompleto, String nuevoTelefono, String nuevoEmail) throws Exception {
+        return reservaPrincipal.editarCuenta(usuario, nuevoNombreCompleto, nuevoTelefono, nuevoEmail);
+    }
+
+    @Override
+    public boolean editarAlojamiento(String id, String tipo, String nombre, String ciudad, String descripcion, List<TipoServicio> serviciosIncluidos, File imagen, Double costoAseo, Double costoMantenimiento, Double precioPorNoche, Integer capacidadMaxima, List<Habitacion> habitaciones) throws Exception {
+        return reservaPrincipal.editarAlojamiento(id, tipo, nombre, ciudad, descripcion, serviciosIncluidos, imagen, costoAseo, costoMantenimiento, precioPorNoche, capacidadMaxima, habitaciones);
+    }
+
+    @Override
     public boolean actualizarContrasena(String correo, String codigoVerificacion, String nuevaContrasena) throws Exception {
         return reservaPrincipal.actualizarContrasena(correo, codigoVerificacion, nuevaContrasena);
     }
+
+    @Override
+    public void realizarReserva(Usuario usuario, LocalDate fechaInicio, LocalDate fechaFin, Alojamiento alojamiento, int numeroHuespedes, Habitacion habitacionSeleccionada) throws Exception {
+        reservaPrincipal.realizarReserva(usuario, fechaInicio, fechaFin, alojamiento, numeroHuespedes, habitacionSeleccionada);
+    }
+
 }

@@ -12,8 +12,6 @@ import java.io.File;
 
 public class Habitacion {
     private String numeroHabitacion;
-    private float precio;
+    private double precio;
     private int capacidad;
-    private File imagen;
-    private String descripcion;
 }

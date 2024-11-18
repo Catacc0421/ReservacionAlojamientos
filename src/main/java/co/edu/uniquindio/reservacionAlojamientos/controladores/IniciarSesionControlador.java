@@ -46,6 +46,7 @@ public class IniciarSesionControlador {
                 if (email.equals(ADMIN_EMAIL) && contrasena.equals(ADMIN_PASSWORD)) {
                     // Redirigir al panel del administrador
                     controladorPrincipal.navegarVentana("/PanelAdministrador.fxml", "Panel Administrador");
+                    controladorPrincipal.cerrarVentana(txtEmail);
                 } else {
                     controladorPrincipal.mostrarAlerta("Error de acceso, Las credenciales de administrador son incorrectas.", Alert.AlertType.ERROR);
                 }
@@ -55,10 +56,12 @@ public class IniciarSesionControlador {
                 Sesion.getInstanciaSesion().setUsuario(usuario);
                 if (!usuario.isActivo()) {
                     controladorPrincipal.navegarVentana("/ActivacionCuenta.fxml", "Activación de cuenta");
+                    controladorPrincipal.cerrarVentana(txtEmail);
                 }else{
                     if (usuario != null) {
                         // Redirigir al panel de usuario común
                         controladorPrincipal.navegarVentana("/PanelUsuario.fxml", "Panel Cliente");
+                        controladorPrincipal.cerrarVentana(txtEmail);
                     } else {
                         controladorPrincipal.mostrarAlerta("Error de acceso, Correo o contraseña incorrectos.", Alert.AlertType.ERROR );
                     }

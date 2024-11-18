@@ -1,28 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="788.0" prefWidth="1177.0" style="-fx-background-color: #9ef5aa; -fx-padding: 10;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.PanelAdministradorControlador">
+<VBox alignment="CENTER" prefHeight="826.0" prefWidth="1516.0" style="-fx-background-color: #9ef5aa; -fx-padding: 10;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.PanelAdministradorControlador">
    <children>
       <HBox prefHeight="44.0" prefWidth="1157.0" style="-fx-spacing: 320;">
          <children>
@@ -36,7 +20,7 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" prefHeight="42.0" prefWidth="118.0" style="-fx-background-color: #c4f39b;" text="Cerrar sesión">
+            <Button fx:id="btCerrarSesion" mnemonicParsing="false" onAction="#cerrarSesion" prefHeight="42.0" prefWidth="118.0" style="-fx-background-color: #c4f39b;" text="Cerrar sesión">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -48,64 +32,154 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TabPane prefHeight="690.0" prefWidth="1157.0" style="-fx-background-color: #edfcef;" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="732.0" prefWidth="1157.0" style="-fx-background-color: #edfcef;" tabClosingPolicy="UNAVAILABLE">
          <tabs>
             <Tab style="-fx-background-color: #c4f39b;" text="Gestionar Alojamientos">
                <content>
-                  <VBox alignment="TOP_CENTER" prefHeight="581.0" prefWidth="1123.0" style="-fx-padding: 20; -fx-spacing: 10;">
+                  <VBox alignment="TOP_CENTER" prefHeight="697.0" prefWidth="1157.0" style="-fx-padding: 20; -fx-spacing: 10;">
                      <children>
                         <Label prefHeight="39.0" prefWidth="217.0" text="GESTIONAR ALOJAMIENTOS">
                            <font>
                               <Font name="System Bold" size="16.0" />
                            </font>
                         </Label>
-                        <HBox alignment="CENTER_LEFT" prefHeight="326.0" prefWidth="1117.0" style="-fx-spacing: 30;">
+                        <HBox alignment="CENTER_LEFT" prefHeight="430.0" prefWidth="1117.0" style="-fx-spacing: 30; -fx-padding: 15;">
                            <children>
-                              <GridPane alignment="CENTER_LEFT">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                              </GridPane>
-                              <VBox alignment="CENTER" prefHeight="315.0" prefWidth="327.0" style="-fx-spacing: 30;">
+                              <VBox alignment="TOP_CENTER" prefHeight="316.0" prefWidth="1086.0" style="-fx-spacing: 10;">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="67.0" prefWidth="196.0" text="Agregar Alojamiento">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Button>
-                                    <Button mnemonicParsing="false" prefHeight="67.0" prefWidth="201.0" text="Editar Alojamiento">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Button>
-                                    <Button mnemonicParsing="false" prefHeight="68.0" prefWidth="202.0" text="Eliminar Alojamiento">
-                                       <font>
-                                          <Font size="16.0" />
-                                       </font>
-                                    </Button>
+                                    <ComboBox fx:id="cbTipoAlojamiento" prefHeight="26.0" prefWidth="223.0" promptText="Selelcione el tipo de alojamiento" />
+                                    <HBox alignment="CENTER" prefHeight="353.0" prefWidth="1086.0" style="-fx-spacing: 10;">
+                                       <children>
+                                          <GridPane prefHeight="338.0" prefWidth="382.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="205.20001220703125" minWidth="10.0" prefWidth="172.59999389648436" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="249.20001220703125" minWidth="10.0" prefWidth="230.2000061035156" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Label text="Nombre del Alojamiento:">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Ciudad:" GridPane.rowIndex="1">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Descripción:" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Servicios incluídos:" GridPane.rowIndex="8">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Costo de aseo:" GridPane.rowIndex="3">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Costo de mantenimiento:" GridPane.rowIndex="4">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Precio X noche:" GridPane.rowIndex="5">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Capacidad máxima:" GridPane.rowIndex="6">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label text="Imagen:" GridPane.rowIndex="7">
+                                                   <font>
+                                                      <Font size="14.0" />
+                                                   </font>
+                                                </Label>
+                                                <TextField fx:id="txtNombre" visible="false" GridPane.columnIndex="1" />
+                                                <ComboBox fx:id="cbCiudad" prefHeight="26.0" prefWidth="232.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <TextArea fx:id="txtDescripcion" prefHeight="200.0" prefWidth="200.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                                   <children>
+                                                      <TextField fx:id="txtServicio" prefHeight="34.0" prefWidth="90.0" promptText="Servicio" visible="false" />
+                                                      <Button fx:id="btAgregar" mnemonicParsing="false" onAction="#agregarServicio" prefHeight="42.0" prefWidth="59.0" text="Agregar" />
+                                                      <Button fx:id="btEditar" mnemonicParsing="false" onAction="#editarServicio" prefHeight="38.0" prefWidth="57.0" text="Editar" />
+                                                   </children>
+                                                </HBox>
+                                                <TextField fx:id="txtCostoAseo" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                <TextField fx:id="txtCostoMantenimiento" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                <TextField fx:id="txtPrecioNoche" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                                <TextField fx:id="txtCapacidadMaxima" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                <Button fx:id="btImagen" mnemonicParsing="false" onAction="#agregarImagen" prefHeight="26.0" prefWidth="234.0" text="Agregar Imagen" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                                <ComboBox fx:id="cbListaServicios" prefHeight="26.0" prefWidth="145.0" promptText="Lista de servicios" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                                             </children>
+                                          </GridPane>
+                                          <GridPane alignment="CENTER" maxHeight="-Infinity" prefHeight="71.0" prefWidth="490.0">
+                                            <columnConstraints>
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="220.5999755859375" minWidth="10.0" prefWidth="107.4" />
+                                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="378.3999755859375" minWidth="10.0" prefWidth="372.8" />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                              <RowConstraints maxHeight="196.4" minHeight="10.0" prefHeight="37.8" vgrow="SOMETIMES" />
+                                              <RowConstraints maxHeight="290.79999389648435" minHeight="10.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                                            </rowConstraints>
+                                             <children>
+                                                <Label text="Habitación hotel:" />
+                                                <HBox alignment="CENTER_LEFT" prefHeight="38.0" prefWidth="360.0" GridPane.columnIndex="1">
+                                                   <children>
+                                                      <TextField fx:id="txtNumeroHabitacion" prefHeight="26.0" prefWidth="128.0" promptText="Número habitación " visible="false" />
+                                                      <TextField fx:id="txtPrecioHabitacion" prefHeight="26.0" prefWidth="51.0" promptText="Precio" visible="false" />
+                                                      <TextField fx:id="txtCapacidadHabitacion" prefHeight="26.0" prefWidth="71.0" promptText="Capacidad" visible="false" />
+                                                      <Button fx:id="btAgregarHabitacion" mnemonicParsing="false" onAction="#agregarHabitacion" text="Agregar" visible="false" />
+                                                      <Button fx:id="btEditarHabitacion" mnemonicParsing="false" onAction="#editarHabitación" text="Editar" visible="false" />
+                                                   </children>
+                                                </HBox>
+                                                <ComboBox fx:id="cbListaHabitaciones" prefHeight="26.0" prefWidth="165.0" promptText="Lista de habitaciones" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                             </children>
+                                          </GridPane>
+                                          <VBox alignment="CENTER" prefHeight="338.0" prefWidth="181.0" style="-fx-spacing: 30;">
+                                             <children>
+                                                <ImageView fx:id="imagenSeleccionada" fitHeight="136.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                                                <Button fx:id="btAgregar" mnemonicParsing="false" onAction="#agregarAlojamiento" style="-fx-background-color: #c6f8b7;" text="Agregar Alojamiento" />
+                                                <Button fx:id="btEditar" mnemonicParsing="false" onAction="#editarAlojamiento" prefHeight="26.0" prefWidth="126.0" style="-fx-background-color: #f8e3b7;" text="Editar Alojamiento" />
+                                                <Button fx:id="btEliminar" mnemonicParsing="false" onAction="#eliminarAlojamiento" style="-fx-background-color: #f86d6d;" text="Eliminar Alojamiento" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
                                  </children>
                               </VBox>
-                           </children>
-                        </HBox>
-                        <TableView prefHeight="266.0" prefWidth="1117.0">
+                           </children></HBox>
+                         
+                        <TableView fx:id="tablaAlojamientos" prefHeight="260.0" prefWidth="1117.0">
                           <columns>
-                            <TableColumn prefWidth="98.39999389648438" text="C1" />
-                            <TableColumn prefWidth="73.60000610351562" text="C2" />
-                              <TableColumn prefWidth="84.0" text="Column X" />
-                              <TableColumn prefWidth="90.4000244140625" text="Column X" />
-                              <TableColumn prefWidth="81.60003662109375" text="Column X" />
-                              <TableColumn prefWidth="119.99996948242188" text="Column X" />
-                              <TableColumn prefWidth="105.5999755859375" text="Column X" />
-                              <TableColumn prefWidth="116.79998779296875" text="Column X" />
-                              <TableColumn prefWidth="113.5999755859375" text="Column X" />
-                              <TableColumn prefWidth="112.79998779296875" text="Column X" />
-                              <TableColumn prefWidth="126.4000244140625" text="Column X" />
+                            <TableColumn fx:id="colNombre" prefWidth="110.00001335144043" text="Nombre" />
+                            <TableColumn fx:id="colCiudad" prefWidth="89.19998168945312" text="ciudad" />
+                              <TableColumn fx:id="colDescripcion" prefWidth="139.60003662109375" text="Descripción" />
+                              <TableColumn fx:id="colCostoAseo" prefWidth="72.0" text="Costo aseo" />
+                              <TableColumn fx:id="colCostoMantenimiento" prefWidth="125.5999755859375" text="costo mantenimiento" />
+                              <TableColumn fx:id="colPrecioNoche" prefWidth="94.5999755859375" text="Precio x noche" />
+                              <TableColumn fx:id="colCapacidadMaxima" prefWidth="114.0" text="capacidad máxima" />
+                              <TableColumn fx:id="colServiciosIncluidos" prefWidth="202.79998779296875" text="servicios incluidos" />
+                              <TableColumn fx:id="colImagen" prefWidth="167.20001220703125" text="Imagen" />
+                              <TableColumn fx:id="colHabitaciones" prefWidth="343.7999267578125" text="Habitaciones" />
                           </columns>
                         </TableView>
                      </children>
@@ -120,8 +194,8 @@
                               <Font name="System Bold" size="20.0" />
                            </font>
                         </Label>
-                         <HBox prefHeight="286.0" prefWidth="1117.0" spacing="10">
-                             <BarChart fx:id="barChartOcupacionGanancias" prefHeight="308.0" prefWidth="456.0" title="Ocupación y Ganancias por Alojamiento">
+                         <HBox prefHeight="242.0" prefWidth="1117.0" spacing="10">
+                             <BarChart fx:id="barChartOcupacionGanancias" prefHeight="247.0" prefWidth="456.0" title="Ocupación y Ganancias por Alojamiento">
                                  <xAxis>
                                      <CategoryAxis label="Alojamientos" />
                                  </xAxis>
@@ -131,16 +205,23 @@
                              </BarChart>
                            <VBox alignment="CENTER" prefHeight="308.0" prefWidth="253.0" style="-fx-spacing: 30;">
                               <children>
-                                 <ComboBox prefWidth="150.0" promptText="Tipo de alojamiento" />
+                                 <ComboBox fx:id="cbListaAlojamientos" prefHeight="26.0" prefWidth="165.0" promptText="Lista de alojamientos" />
                                    <Button alignment="TOP_LEFT" onAction="#actualizarOcupacionGanancias" text="Actualizar Ocupación y Ganancias" />
                               </children>
                            </VBox>
                          </HBox>
-                         <HBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="1117.0" spacing="10">
-                             <PieChart fx:id="pieChartPopularidad" prefHeight="105.0" prefWidth="500.0" title="Alojamientos más Populares" />
+                         <HBox alignment="CENTER_LEFT" prefHeight="222.0" prefWidth="1117.0" spacing="10">
+                           <BarChart fx:id="barChartAlojamientosPopulares" prefHeight="227.0" prefWidth="456.0" title="Alojamientos más populares">
+                              <xAxis>
+                                 <CategoryAxis label="Alojamientos" />
+                              </xAxis>
+                              <yAxis>
+                                 <NumberAxis label="Porcentaje / Ganancia Total" />
+                              </yAxis>
+                           </BarChart>
                            <VBox alignment="CENTER" prefHeight="171.0" prefWidth="205.0" style="-fx-spacing: 30;">
                               <children>
-                                 <ComboBox prefWidth="150.0" promptText="Tipo de alojamiento" />
+                                 <ComboBox fx:id="cbCiudadEstadisticas" prefHeight="26.0" prefWidth="89.0" promptText="Ciudad" />
                                    <Button onAction="#actualizarPopularidadAlojamientos" text="Actualizar Popularidad" />
                               </children>
                            </VBox>
@@ -164,7 +245,7 @@
                               <Font name="System Bold" size="18.0" />
                            </font>
                         </Label>
-                        <HBox alignment="CENTER" prefHeight="225.0" prefWidth="1157.0" style="-fx-spacing: 200;">
+                        <HBox alignment="CENTER" prefHeight="225.0" prefWidth="1157.0" style="-fx-spacing: 60;">
                            <children>
                               <GridPane prefHeight="226.0" prefWidth="406.0">
                                 <columnConstraints>
@@ -174,37 +255,38 @@
                                 <rowConstraints>
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Label text="Tipo de alojamiento:" />
-                                    <Label text="Tipo de oferta especial:" GridPane.rowIndex="1" />
-                                    <Label text="Descuento:" GridPane.rowIndex="2" />
+                                    <Label text="Tipo de oferta especial:" />
+                                    <Label text="Descuento:" GridPane.rowIndex="1" />
+                                    <Label text="Número de días" GridPane.rowIndex="2" />
                                     <Label text="Fecha inicio de la oferta:" GridPane.rowIndex="3" />
                                     <Label text="Fecha fin de la oferta:" GridPane.rowIndex="4" />
-                                    <ComboBox fx:id="cbTipoAlojamientoOferta" prefHeight="26.0" prefWidth="210.0" GridPane.columnIndex="1" />
-                                    <ComboBox fx:id="cbTipoOferta" prefHeight="26.0" prefWidth="236.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <TextField fx:id="txtDescuentoOferta" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                    <DatePicker fx:id="dpInicioOferta" prefHeight="31.0" prefWidth="203.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                    <DatePicker fx:id="dpFinOferta" prefHeight="30.0" prefWidth="203.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                    <ComboBox fx:id="cbTipoOferta" prefHeight="26.0" prefWidth="236.0" GridPane.columnIndex="1" />
+                                    <TextField fx:id="txtDescuentoOferta" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="txtNumeroDias" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <DatePicker fx:id="dpInicioOferta" prefHeight="31.0" prefWidth="203.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <DatePicker fx:id="dpFinOferta" prefHeight="30.0" prefWidth="203.0" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                  </children>
                               </GridPane>
-                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#crearOfertaEspecial" prefHeight="73.0" prefWidth="247.0" text="Crear la oferta de los alojamientos">
-                                 <font>
-                                    <Font name="System Bold" size="14.0" />
-                                 </font>
-                              </Button>
+                              <VBox alignment="CENTER" prefHeight="226.0" prefWidth="218.0" style="-fx-spacing: 30;">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#agregarOferta" text="Agregar oferta especial" />
+                                    <Button mnemonicParsing="false" onAction="#editarOferta" prefHeight="26.0" prefWidth="141.0" text="Editar oferta especial" />
+                                    <Button mnemonicParsing="false" onAction="#eliminarOferta" text="Eliminar oferta especial" />
+                                 </children>
+                              </VBox>
                            </children>
                         </HBox>
-                        <TableView fx:id="tablaDescuentos" prefHeight="298.0" prefWidth="1021.0">
+                        <TableView fx:id="tablaDescuentos" prefHeight="298.0" prefWidth="1028.0">
                           <columns>
-                            <TableColumn fx:id="colAlojamientoOferta" prefWidth="176.00003850460052" text="ALOJAMIENTO" />
-                            <TableColumn fx:id="colTipoOferta" prefWidth="221.59999084472656" text="TIPO DE OFERTA" />
-                              <TableColumn fx:id="colDescuento" prefWidth="191.19998168945312" text="DESCUENTO" />
-                              <TableColumn fx:id="ColInicioOferta" prefWidth="256.0" text="FECHA DE INICIO" />
-                              <TableColumn fx:id="colFinOferta" prefWidth="251.20004272460938" text="FECHA DE FIN" />
+                              <TableColumn fx:id="colDescuentoDias" prefWidth="186.39998281002045" text="DESCUENTO DÍAS" />
+                              <TableColumn fx:id="ColInicioOferta" prefWidth="356.0" text="FECHA DE INICIO" />
+                              <TableColumn fx:id="colFinOferta" prefWidth="267.99993896484375" text="FECHA DE FIN" />
+                              <TableColumn fx:id="colDescuentoEstancia" prefWidth="272.00006103515625" text="DESCUENTO ESTANCIA" />
                           </columns>
                         </TableView>
                      </children>

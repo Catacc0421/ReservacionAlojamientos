@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -14,15 +9,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="669.0" prefWidth="935.0" style="-fx-background-color: #9ef5aa; -fx-padding: 30;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.InicioControlador">
+<VBox prefHeight="365.0" prefWidth="491.0" style="-fx-background-color: #9ef5aa; -fx-padding: 30;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.InicioControlador">
    <children>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 30;">
          <children>
-            <ImageView fitHeight="104.0" fitWidth="105.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@img/Book.png" />
-               </image>
-            </ImageView>
             <Label alignment="CENTER" text="Página de inicio">
                <font>
                   <Font name="System Bold" size="16.0" />
@@ -30,49 +20,16 @@
             </Label>
          </children>
       </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 50;">
+      <HBox alignment="CENTER" prefHeight="298.0" prefWidth="802.0">
          <children>
-            <Region prefHeight="72.0" prefWidth="270.0" />
-            <Label prefHeight="18.0" prefWidth="322.0" text="¿Qué alojamiento estás buscando?">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Label>
-            <Region prefHeight="72.0" prefWidth="78.0" />
+            <ImageView fitHeight="210.0" fitWidth="414.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@img/Book.png" />
+               </image>
+            </ImageView>
          </children>
       </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="98.0" prefWidth="1106.0" style="-fx-spacing: 30;">
-         <children>
-            <Label text="Nombre:" />
-            <TextField fx:id="txtNombre" style="-fx-background-color: #0edfc0;" />
-            <Label text="Tipo:" />
-            <ComboBox fx:id="comboBoxTipo" prefWidth="150.0" style="-fx-background-color: #69fc86; -fx-border-color: #0c9743;" />
-            <Label text="Ciudad:" />
-            <ChoiceBox fx:id="chooseCiudad" prefWidth="150.0" style="-fx-background-color: #69fc86; -fx-border-color: #0c9743;" />
-            <Button fx:id="buttonBuscar" mnemonicParsing="false" onAction="#buscarAlojamientos" style="-fx-background-color: #0edfc0;" text="Buscar Alojamientos" />
-         </children>
-      </HBox>
-      <HBox prefHeight="298.0" prefWidth="802.0">
-         <children>
-            <TableView fx:id="tablaBusqueda" prefHeight="271.0" prefWidth="883.0" style="-fx-background-color: #69fc86; -fx-border-color: #0c9743;">
-               <columns>
-                  <TableColumn fx:id="colNombre" prefWidth="97.60000324249268" style="-fx-background-color: #9ef5aa;" text="NOMBRE" />
-                  <TableColumn fx:id="colCiudad" prefWidth="115.19992065429688" style="-fx-background-color: #9ef5aa;" text="CIUDAD" />
-                  <TableColumn fx:id="colDescripcion" prefWidth="109.60005187988281" style="-fx-background-color: #9ef5aa;" text="DESCRIPCIÓN" />
-                  <TableColumn fx:id="colImagen" prefWidth="97.5999755859375" style="-fx-background-color: #9ef5aa;" text="IMAGEN" />
-                  <TableColumn fx:id="colServicios" prefWidth="156.79998779296875" style="-fx-background-color: #9ef5aa;" text="SERVICIOS INCLUÍDOS" />
-                  <TableColumn fx:id="colTipoAlojamiento" prefWidth="180.80001220703127" style="-fx-background-color: #9ef5aa;" text="TIPO DE ALOJAMIENTO" />
-                  <TableColumn prefWidth="112.00003662109373" style="-fx-background-color: #9ef5aa;" text="OFERTAS" />
-               </columns>
-            </TableView>
-         </children>
-      </HBox>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" prefWidth="758.0" text="Si todavía no te encuentras registrado pulsa aquí">
-         <font>
-            <Font name="System Bold" size="12.0" />
-         </font>
-      </Label>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 220; -fx-padding: 10;">
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 60; -fx-padding: 10;">
          <children>
             <Region prefHeight="52.0" prefWidth="0.0" />
             <Button fx:id="buttonIniciarSesion" mnemonicParsing="false" onAction="#iniciarSesion" style="-fx-background-color: #0edfc0;" text="Iniciar sesión">

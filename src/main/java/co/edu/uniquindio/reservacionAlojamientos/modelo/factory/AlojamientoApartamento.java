@@ -14,14 +14,16 @@ import java.util.List;
 @Getter
 @Setter
 public class AlojamientoApartamento extends Alojamiento {
-    private double costoAseoMantenimiento;
+    private double costoAseo;
+    private double costoMantenimiento;
     private double precioNoche;
     private int capacidadMaxima;
 
     @Builder
-    public AlojamientoApartamento(String id, String nombreAlojamiento, String ciudad, String descripcion, File image, List<TipoServicio> serviciosIncluidos, double costoAseoMantenimiento, double precioNoche, int capacidadMaxima, OfertaRangoFechas ofertaRangoFechas, OfertaEstancia ofertaEstancia) {
+    public AlojamientoApartamento(String id, String nombreAlojamiento, String ciudad, String descripcion, File image, List<TipoServicio> serviciosIncluidos, double costoAseo,double costoMantenimiento, double precioNoche, int capacidadMaxima, OfertaRangoFechas ofertaRangoFechas, OfertaEstancia ofertaEstancia) {
         super(id, nombreAlojamiento, ciudad, descripcion, image, serviciosIncluidos, ofertaEstancia, ofertaRangoFechas);
-        this.costoAseoMantenimiento = costoAseoMantenimiento;
+        this.costoAseo = costoAseo;
+        this.costoMantenimiento = costoMantenimiento;
         this.precioNoche = precioNoche;
         this.capacidadMaxima = capacidadMaxima;
     }

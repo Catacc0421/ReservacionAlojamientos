@@ -4,12 +4,12 @@ import lombok.Getter;
 
 @Getter
 public enum TipoServicio {
-    WIFI("Wifi"),
-    PISCINA("Piscina"),
-    DESAYUNO("Desayuno"),
-    ESTACIONAMIENTO("Estacionamiento"),
-    RESTAURANTE_BAR("Restaurante Bar"),
-    TELEVISION("Televisión");
+    WIFI("WIFI"),
+    PISCINA("PISCINA"),
+    DESAYUNO("DESAYUNO"),
+    ESTACIONAMIENTO("ESTACIONAMIENTO"),
+    RESTAURANTE_BAR("RESTAURANTEBAR"),
+    TELEVISION("TELEVISION");
 
 
     private final String nombre;
