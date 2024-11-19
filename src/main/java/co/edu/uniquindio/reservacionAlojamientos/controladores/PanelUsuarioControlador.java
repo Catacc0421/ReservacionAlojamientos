@@ -27,6 +27,12 @@ public class PanelUsuarioControlador implements Initializable, Observer {
 
     //GESTIONAR RESERVAS
     @FXML
+    private TextField txtCalificacion;
+
+    @FXML
+    private TextArea txtComentario;
+
+    @FXML
     private ComboBox<String> cbRangoPrecios;
     @FXML
     private ComboBox<Habitacion> cbListarHabitaciones;
@@ -91,6 +97,8 @@ public class PanelUsuarioControlador implements Initializable, Observer {
     private TableView<Alojamiento> tablaBusqueda;
 
     //HISTORIAL DE RESERVAS
+    @FXML
+    private TableColumn<Alojamiento, String> colResena;
     @FXML
     private Button btCancelarReserva;
     @FXML
@@ -240,24 +248,25 @@ public class PanelUsuarioControlador implements Initializable, Observer {
 
             return new SimpleStringProperty(tipo);
         });
+        // Aquí se configura el resto de las columnas (como colEstado, colFechaInicio, etc.)
+        colFechaInicio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFechaInicio().toString()));
+        colFechaFin.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFechaFin().toString()));
+        colNumeroHuespedes.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getNumeroHuespedes())));
+        colEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstado().toString()));
         //Cargar categorias en el ComboBox
         comboBoxTipo.setItems( FXCollections.observableList(controladorPrincipal.listarTiposAlojamientos()) );
         chooseCiudad.setItems (FXCollections.observableList(controladorPrincipal.listarCiudades()));
         cbRangoPrecios.setItems(FXCollections.observableList(controladorPrincipal.listarRangosPrecios()));
+
+
+        alojamientosObservable = FXCollections.observableArrayList();
         tablaBusqueda.setItems(alojamientosObservable);
         cbListarHabitaciones.setItems(FXCollections.observableList(controladorPrincipal.listarHabitaciones()));
-        tablaHistorial.setItems(reservasObservable);
-
-
         // Inicializar comboBox de habitaciones (vacío al inicio)
-        cbListarHabitaciones.setVisible(false);
-
-        //Inicializar lista observable y cargar las notas
-        alojamientosObservable = FXCollections.observableArrayList();
         reservasObservable = FXCollections.observableArrayList();
+        tablaHistorial.setItems(reservasObservable);
         cargarAlojamientos();
         cargarHabitaciones();
-        cargarReservas();
         // Evento de clic en la tabla de instalaciones
         tablaBusqueda.setOnMouseClicked(e -> {
             // Obtener la instalación seleccionada en la tabla
@@ -299,11 +308,7 @@ public class PanelUsuarioControlador implements Initializable, Observer {
         cbListarHabitaciones.setOnMouseClicked(e -> {
             habitacionSeleccionada = cbListarHabitaciones.getSelectionModel().getSelectedItem();
 
-            if (reservaSeleccionada != null) {
-                controladorPrincipal.mostrarAlerta("Habitación seleccionada: " + habitacionSeleccionada.getNumeroHabitacion(), Alert.AlertType.INFORMATION);
-            } else {
-                controladorPrincipal.mostrarAlerta("Seleccione una habitacion", Alert.AlertType.WARNING);
-            }
+
         });
         //COLUMNAS DE LA TABLA HISTORIAL
         colAlojamiento.setCellValueFactory(cellData -> {
@@ -314,11 +319,6 @@ public class PanelUsuarioControlador implements Initializable, Observer {
             return new SimpleStringProperty(""); // En caso de que sea nulo
         });
 
-        // Aquí se configura el resto de las columnas (como colEstado, colFechaInicio, etc.)
-        colFechaInicio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFechaInicio().toString()));
-        colFechaFin.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFechaFin().toString()));
-        colNumeroHuespedes.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getNumeroHuespedes())));
-        colEstado.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEstado().toString()));
         lbNombreUsuario.setText( usuarioActual.getNombreCompleto() + "   Bienvenido al panel de usuario de BookYourStayAlojamientos " );
         lbSaldoBilletera.setText( "Su monto actual es: " + usuarioActual.getBilleteraVirtual().getSaldo());
     }
@@ -401,6 +401,7 @@ public class PanelUsuarioControlador implements Initializable, Observer {
 
             // Llamar al método cancelarReserva de la clase ReservaPrincipal
             controladorPrincipal.cancelarReserva(reservaSeleccionada);
+            actualizarInterfazSaldo();
             notificar();
 
             // Notificar al usuario que la reserva ha sido cancelada
@@ -425,17 +426,19 @@ public class PanelUsuarioControlador implements Initializable, Observer {
     @FXML
     void hacerReserva(ActionEvent event) {
         try {
-            // Validar si el alojamiento es un hotel y si se seleccionó una habitación
-            Habitacion habitacionSeleccionada = null;
+            // Verificar si el alojamiento seleccionado es de tipo AlojamientoHotel
             if (alojamientoSeleccionado instanceof AlojamientoHotel) {
+                // Si es un hotel, obtener la habitación seleccionada del ComboBox
                 habitacionSeleccionada = cbListarHabitaciones.getSelectionModel().getSelectedItem();
+
+                // Validar que se haya seleccionado una habitación
                 if (habitacionSeleccionada == null) {
-                    controladorPrincipal.mostrarAlerta("Por favor seleccione una habitación para hacer la reserva.", Alert.AlertType.WARNING);
+                    controladorPrincipal.mostrarAlerta("Por favor seleccione una habitación", Alert.AlertType.WARNING);
                     return;
                 }
             }
 
-            // Validar fechas y número de huéspedes
+            // Validar fechas
             LocalDate fechaInicio = dpFechaInicio.getValue();
             LocalDate fechaFin = dpFechaFin.getValue();
             if (fechaInicio == null || fechaFin == null || fechaInicio.isAfter(fechaFin)) {
@@ -443,36 +446,32 @@ public class PanelUsuarioControlador implements Initializable, Observer {
                 return;
             }
 
-            int numeroHuespedes;
-            try {
-                numeroHuespedes = Integer.parseInt(txtNumeroHuespedes.getText());
-                if (numeroHuespedes <= 0) {
-                    throw new NumberFormatException("El número de huéspedes debe ser mayor a 0.");
-                }
-            } catch (NumberFormatException e) {
-                controladorPrincipal.mostrarAlerta("El número de huéspedes debe ser un valor numérico mayor a 0.", Alert.AlertType.WARNING);
+            // Validar número de huéspedes
+            int numeroHuespedes = validarNumeroHuespedes(txtNumeroHuespedes.getText());
+            if (numeroHuespedes <= 0) {
+                controladorPrincipal.mostrarAlerta("El número de huéspedes debe ser mayor a 0.", Alert.AlertType.WARNING);
                 return;
             }
 
             // Intentar realizar la reserva
-            controladorPrincipal.realizarReserva(
-                    usuarioActual,
-                    fechaInicio,
-                    fechaFin,
-                    alojamientoSeleccionado,
-                    numeroHuespedes,
-                    habitacionSeleccionada
-            );
+            controladorPrincipal.realizarReserva(usuarioActual, fechaInicio, fechaFin, alojamientoSeleccionado, numeroHuespedes, habitacionSeleccionada);
 
-            // Notificar éxito, actualizar saldo e interfaz
             notificar();
             actualizarInterfazSaldo();
-            controladorPrincipal.mostrarAlerta("Su reserva ha sido creada exitosamente. Verifique su correo para más detalles.", Alert.AlertType.INFORMATION);
+            controladorPrincipal.mostrarAlerta("Su reserva ha sido creada exitosamente. Verifique su correo.", Alert.AlertType.INFORMATION);
 
         } catch (Exception e) {
-            // Manejar errores durante la reserva
             controladorPrincipal.mostrarAlerta("No se pudo realizar la reserva: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    // Métodos auxiliares en el Controlador
+    private int validarNumeroHuespedes(String numeroHuespedesTexto) throws NumberFormatException {
+        int numeroHuespedes = Integer.parseInt(numeroHuespedesTexto);
+        if (numeroHuespedes <= 0) {
+            throw new NumberFormatException("El número de huéspedes debe ser mayor a 0.");
+        }
+        return numeroHuespedes;
     }
 
     @FXML
@@ -555,6 +554,42 @@ public class PanelUsuarioControlador implements Initializable, Observer {
         }
 
     }
+    @FXML
+    void realizarResena(){
+        Reserva reservaSeleccionada = tablaHistorial.getSelectionModel().getSelectedItem();
+
+        if (reservaSeleccionada == null) {
+            controladorPrincipal.mostrarAlerta("Debe seleccionar una reserva para valorar.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        try {
+            // Obtener la calificación y el comentario del usuario
+            int calificacion = Integer.parseInt(txtCalificacion.getText());
+            String comentario = txtComentario.getText().trim();
+
+            if (calificacion < 1 || calificacion > 5 || comentario.isEmpty()) {
+                throw new Exception("Debe ingresar una calificación válida (1-5) y un comentario.");
+            }
+            Resena resena = new Resena(comentario, calificacion, usuarioActual);
+
+            // Agregar la reseña al alojamiento asociado a la reserva
+            Alojamiento alojamiento = reservaSeleccionada.getAlojamiento();
+            boolean exito = controladorPrincipal.agregarResenaSiReservaHaPasado(alojamiento, resena, usuarioActual);
+
+            if (exito) {
+                controladorPrincipal.mostrarAlerta("Reseña agregada con éxito.", Alert.AlertType.INFORMATION);
+                // Limpia los campos de comentario y calificación
+                txtComentario.clear();
+                txtCalificacion.clear();
+            } else {
+                controladorPrincipal.mostrarAlerta("No puede dejar una reseña antes de que finalice su reserva.", Alert.AlertType.WARNING);
+            }
+        } catch (Exception e) {
+            controladorPrincipal.mostrarAlerta("Error: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+
+    }
     private void actualizarInterfazNombre(){
         lbNombreUsuario.setText(usuarioActual.getNombreCompleto() + "   Bienvenido al panel de usuario de BookYourStayAlojamientos ");
     }
@@ -562,15 +597,22 @@ public class PanelUsuarioControlador implements Initializable, Observer {
         // Suponiendo que tienes una etiqueta que muestra el saldo de la billetera
         lbSaldoBilletera.setText("Saldo actual: $" + usuarioActual.getBilleteraVirtual().getSaldo());
     }
-
-    private void cargarReservas() {
-        reservasObservable.setAll(controladorPrincipal.listarReservasPorPersona(usuarioActual.getCedula()));
-    }
     @Override
     public void notificar() {
         cargarReservas();
     }
-    private void cargarHabitaciones() {
-        cbListarHabitaciones.setItems(FXCollections.observableArrayList(habitaciones));
+
+    private void cargarReservas() {
+        reservasObservable.setAll(controladorPrincipal.listarReservasPorPersona(usuarioActual.getCedula()));
     }
+    private void cargarHabitaciones() {
+        if (alojamientoSeleccionado instanceof AlojamientoHotel) {
+            AlojamientoHotel hotel = (AlojamientoHotel) alojamientoSeleccionado;
+
+            // Actualizar el ComboBox con las habitaciones disponibles del hotel
+            ObservableList<Habitacion> habitacionesDisponibles = FXCollections.observableArrayList(hotel.getHabitaciones());
+            cbListarHabitaciones.setItems(habitacionesDisponibles);
+        }
+    }
+
 }

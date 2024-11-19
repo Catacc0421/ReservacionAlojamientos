@@ -16,6 +16,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ControladorPrincipal implements ReservaServicios {
@@ -187,6 +188,31 @@ public class ControladorPrincipal implements ReservaServicios {
     @Override
     public boolean editarAlojamiento(String id, String tipo, String nombre, String ciudad, String descripcion, List<TipoServicio> serviciosIncluidos, File imagen, Double costoAseo, Double costoMantenimiento, Double precioPorNoche, Integer capacidadMaxima, List<Habitacion> habitaciones) throws Exception {
         return reservaPrincipal.editarAlojamiento(id, tipo, nombre, ciudad, descripcion, serviciosIncluidos, imagen, costoAseo, costoMantenimiento, precioPorNoche, capacidadMaxima, habitaciones);
+    }
+
+    @Override
+    public double calcularOcupacion(Alojamiento alojamiento) {
+        return reservaPrincipal.calcularOcupacion(alojamiento);
+    }
+
+    @Override
+    public double calcularGanancia(Alojamiento alojamiento) {
+        return reservaPrincipal.calcularGanancia(alojamiento);
+    }
+
+    @Override
+    public boolean agregarResenaSiReservaHaPasado(Alojamiento alojamiento, Resena resena, Usuario usuario) {
+        return reservaPrincipal.agregarResenaSiReservaHaPasado(alojamiento, resena, usuario);
+    }
+
+    @Override
+    public Map<Alojamiento, Integer> obtenerReservasPorCiudad(String ciudad) {
+        return reservaPrincipal.obtenerReservasPorCiudad(ciudad);
+    }
+
+    @Override
+    public Map<String, Double> calcularRentabilidadPorTipo() {
+        return reservaPrincipal.calcularRentabilidadPorTipo();
     }
 
     @Override

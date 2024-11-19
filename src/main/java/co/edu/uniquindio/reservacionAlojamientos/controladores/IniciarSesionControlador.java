@@ -27,7 +27,7 @@ public class IniciarSesionControlador {
 
     @FXML
     private CheckBox txtValidar;
-    private static final String ADMIN_EMAIL = "administradorunico@gmail.com";
+    private static final String ADMIN_EMAIL = "bookyourstayalojamientosa@gmail.com";
     private static final String ADMIN_PASSWORD = "12345admin";
 
     private final ControladorPrincipal controladorPrincipal;

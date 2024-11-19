@@ -1,27 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.Blend?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="1455.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.PanelUsuarioControlador">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="864.0" prefWidth="1455.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="co.edu.uniquindio.reservacionAlojamientos.controladores.PanelUsuarioControlador">
   <tabs>
     <Tab text="Gestionar reservas">
          <content>
@@ -125,27 +110,58 @@
     </Tab>
     <Tab text="Historial de mis reservas">
          <content>
-            <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #9ef5aa; -fx-padding: 40;">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #9ef5aa; -fx-padding: 40;">
                <children>
                   <Label text="AQUÍ PODRÁ ENCONTRAR EL HISTORIAL DE SUS RESERVAS Y CANCELARLAS">
                      <font>
                         <Font name="System Bold Italic" size="30.0" />
                      </font>
                   </Label>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 0;">
+                  <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 60;">
                      <children>
                         <Button fx:id="btCancelarReserva" mnemonicParsing="false" onAction="#cancelarReserva" prefHeight="60.0" prefWidth="126.0" text="CANCELAR RESERVA" />
+                        <Region prefHeight="100.0" prefWidth="438.0" />
+                        <Button fx:id="btValorar" mnemonicParsing="false" onAction="#realizarResena" prefHeight="59.0" prefWidth="138.0" text="VALORAR" />
+                        <Region prefHeight="100.0" prefWidth="30.0" />
                      </children>
                   </HBox>
-                  <TableView fx:id="tablaHistorial" prefHeight="614.0" prefWidth="1431.0">
-                    <columns>
-                      <TableColumn fx:id="colFechaInicio" prefWidth="150.3999900817871" text="FECHA INICIO" />
-                      <TableColumn fx:id="colFechaFin" minWidth="0.0" prefWidth="172.8000030517578" text="FECHA FIN" />
-                        <TableColumn fx:id="colNumeroHuespedes" prefWidth="165.60003662109375" text="NUMERO DE HUESPEDES" />
-                        <TableColumn fx:id="colEstado" prefWidth="172.0" text="ESTADO" />
-                        <TableColumn fx:id="colAlojamiento" prefWidth="767.9999877929688" text="ALOJAMIENTO" />
-                    </columns>
-                  </TableView>
+                  <HBox prefHeight="440.0" prefWidth="1375.0" style="-fx-spacing: 30;">
+                     <children>
+                        <TableView fx:id="tablaHistorial" prefHeight="440.0" prefWidth="908.0">
+                           <columns>
+                              <TableColumn fx:id="colFechaInicio" prefWidth="137.59997177124023" text="FECHA INICIO" />
+                              <TableColumn fx:id="colFechaFin" minWidth="0.0" prefWidth="145.6000518798828" text="FECHA FIN" />
+                              <TableColumn fx:id="colNumeroHuespedes" prefWidth="166.39996337890625" text="NUMERO DE HUESPEDES" />
+                              <TableColumn fx:id="colEstado" prefWidth="115.99993896484375" text="ESTADO" />
+                              <TableColumn fx:id="colAlojamiento" prefWidth="340.79998779296875" text="ALOJAMIENTO" />
+                           </columns>
+                        </TableView>
+                        <GridPane prefHeight="440.0" prefWidth="418.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="203.4000244140625" minWidth="10.0" prefWidth="130.5999755859375" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="330.59998321533203" minWidth="10.0" prefWidth="287.4000244140625" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="265.1999877929687" minHeight="10.0" prefHeight="232.4" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="242.79999389648438" minHeight="10.0" prefHeight="208.4" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Calificación">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Comentario:" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="txtCalificacion" promptText="Agregue un número del 1 al 5" GridPane.columnIndex="1" />
+                              <TextArea fx:id="txtComentario" prefHeight="178.0" prefWidth="288.0" promptText="¿Cómo fue tu experiencia en el alojameinto?" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </HBox>
                </children>
             </VBox>
          </content>
@@ -185,12 +201,6 @@
                         </Button>
                      </children>
                   </HBox>
-                  <TableView prefHeight="349.0" prefWidth="1375.0">
-                    <columns>
-                      <TableColumn prefWidth="75.0" text="C1" />
-                      <TableColumn prefWidth="75.0" text="C2" />
-                    </columns>
-                  </TableView>
                </children>
             </VBox>
          </content>

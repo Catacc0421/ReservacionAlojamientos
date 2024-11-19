@@ -20,5 +20,6 @@ public abstract class Alojamiento {
     private List<TipoServicio> serviciosIncluidos;
     private OfertaEstancia ofertaEstancia;
     private OfertaRangoFechas ofertaRangoFechas;
+    private List<Resena> resenas;
 
 }

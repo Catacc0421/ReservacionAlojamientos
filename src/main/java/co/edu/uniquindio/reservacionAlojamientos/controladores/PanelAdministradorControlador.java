@@ -17,19 +17,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
+import javafx.util.StringConverter;
 
 import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class PanelAdministradorControlador implements Initializable {
 
@@ -150,9 +149,11 @@ public class PanelAdministradorControlador implements Initializable {
     private ComboBox<String> cbCiudadEstadisticas;
 
     @FXML
-    private ComboBox<String> cbListaAlojamientos;
+    private ComboBox<Alojamiento> cbListaAlojamientos;
     @FXML
     private PieChart pieChartRentabilidad;
+    @FXML
+    private Button btnActualizar;
 
     //TAB GESTIONAR OFERTAS
 
@@ -164,7 +165,6 @@ public class PanelAdministradorControlador implements Initializable {
     private TableColumn<OfertaEstancia, String> colDescuentoEstancia;
     @FXML
     private TableView<Alojamiento> tablaDescuentos;
-
 
     @FXML
     private TableColumn<OfertaRangoFechas, String> colFinOferta;
@@ -269,6 +269,9 @@ public class PanelAdministradorControlador implements Initializable {
         });
         cbTipoAlojamiento.setItems(FXCollections.observableList(controladorPrincipal.listarTiposAlojamientos()));
         cbCiudad.setItems(FXCollections.observableList(controladorPrincipal.listarCiudades()));
+        cbListaAlojamientos.setItems(FXCollections.observableList(controladorPrincipal.listarAlojamientos()));
+
+        cbCiudadEstadisticas.setItems(FXCollections.observableList(controladorPrincipal.listarCiudades()));
         cbListaHabitaciones.valueProperty().addListener((obs, oldItem, newItem) -> {
             if (newItem != null) {
                 txtNumeroHabitacion.setText(newItem.getNumeroHabitacion());
@@ -281,7 +284,34 @@ public class PanelAdministradorControlador implements Initializable {
                 txtServicio.setText(newItem.getNombre());
             }
         });
+        cbListaAlojamientos.setConverter(new StringConverter<Alojamiento>() {
+            @Override
+            public String toString(Alojamiento alojamiento) {
+                if (alojamiento != null) {
+                    // Aquí puedes personalizar el formato como desees
+                    return alojamiento.getNombreAlojamiento() + " - " + alojamiento.getCiudad() + " - " + alojamiento.getDescripcion();
+                }
+                return ""; // Si el alojamiento es null, devuelve una cadena vacía
+            }
 
+            @Override
+            public Alojamiento fromString(String string) {
+                // No se necesita implementar esto, ya que no estamos convirtiendo de vuelta desde el String al objeto
+                return null;
+            }
+        });
+        cbListaAlojamientos.setCellFactory(comboBox -> new ListCell<Alojamiento>() {
+            @Override
+            protected void updateItem(Alojamiento alojamiento, boolean empty) {
+                super.updateItem(alojamiento, empty);
+                if (empty || alojamiento == null) {
+                    setText(null);
+                } else {
+                    // Personaliza cómo se muestra cada alojamiento en la lista
+                    setText(alojamiento.getNombreAlojamiento() + " - " + alojamiento.getCiudad() + " - " + alojamiento.getDescripcion());
+                }
+            }
+        });
         alojamientosObservable = FXCollections.observableArrayList();
         tablaAlojamientos.setItems(alojamientosObservable);
         actualizarAlojamientos();
@@ -392,14 +422,6 @@ public class PanelAdministradorControlador implements Initializable {
                 txtCapacidadHabitacion.clear();
             }
         });
-        ofertasObservable = FXCollections.observableArrayList();
-        tablaDescuentos.setItems(alojamientosObservable);
-        actualizarOfertas();
-        //COLUMNAS TABLA GESTIONAR OFERTAS
-        ColInicioOferta.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getFechaInicio())));
-        colFinOferta.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getFechaFin())));
-        colDescuentoEstancia.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getDescuento())));
-        colDescuentoDias.setCellValueFactory(cellData -> new SimpleStringProperty(String.valueOf(cellData.getValue().getPorcentajeDescuento())));
 
     }
     //Metodos para gestionar alojamientos
@@ -644,7 +666,6 @@ public class PanelAdministradorControlador implements Initializable {
         }
     }
     public void actualizarOfertas() {
-        ofertasObservable.setAll(controladorPrincipal.listarAlojamientos());
     }
 
     @FXML
@@ -788,148 +809,74 @@ public class PanelAdministradorControlador implements Initializable {
     }
 
 //Metodos para obtener estadisticas
-    @FXML
-    void actualizarOcupacionGanancias(ActionEvent event) {
+@FXML
+void actualizarOcupacionGanancias(ActionEvent event) {
+    // Obtén el alojamiento seleccionado del ComboBox
+    Alojamiento alojamientoSeleccionado = cbListaAlojamientos.getSelectionModel().getSelectedItem();
 
+    // Verifica que se haya seleccionado un alojamiento
+    if (alojamientoSeleccionado == null) {
+        controladorPrincipal.mostrarAlerta("Debe seleccionar un alojamiento para actualizar la ocupación y ganancias", Alert.AlertType.WARNING);
+        return;
     }
+
+    // Calcula la ocupación y la ganancia del alojamiento seleccionado
+    double ocupacion = controladorPrincipal.calcularOcupacion(alojamientoSeleccionado);
+    double ganancia = controladorPrincipal.calcularGanancia(alojamientoSeleccionado);
+
+    // Limpia los datos existentes en el gráfico de barras
+    barChartOcupacionGanancias.getData().clear();
+
+    // Crea una nueva serie de datos para el gráfico
+    XYChart.Series<String, Number> series = new XYChart.Series<>();
+    series.setName(alojamientoSeleccionado.getNombreAlojamiento()); // Nombre del alojamiento como etiqueta de la serie
+    series.getData().add(new XYChart.Data<>("Ocupación", ocupacion));
+    series.getData().add(new XYChart.Data<>("Ganancia", ganancia));
+
+    // Añade la serie al gráfico de barras
+    barChartOcupacionGanancias.getData().add(series);
+}
 
     @FXML
     void actualizarPopularidadAlojamientos(ActionEvent event) {
+        String ciudad = cbCiudadEstadisticas.getValue();
+        if (ciudad == null) return;
+
+        Map<Alojamiento, Integer> reservasPorAlojamiento = controladorPrincipal.obtenerReservasPorCiudad(ciudad);
+
+        barChartAlojamientosPopulares.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        for (Map.Entry<Alojamiento, Integer> entry : reservasPorAlojamiento.entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey().getNombreAlojamiento(), entry.getValue()));
+        }
+        barChartAlojamientosPopulares.getData().add(series);
 
     }
 
     @FXML
     void actualizarRentabilidadTipos(ActionEvent event) {
+        Map<String, Double> rentabilidadPorTipo = controladorPrincipal.calcularRentabilidadPorTipo();
+
+        pieChartRentabilidad.getData().clear();
+        for (Map.Entry<String, Double> entry : rentabilidadPorTipo.entrySet()) {
+            pieChartRentabilidad.getData().add(new PieChart.Data(entry.getKey(), entry.getValue()));
+        }
 
     }
 
     //Métodos para gestionar descuentos
     @FXML
     void agregarOferta(ActionEvent event) {
-        try {
-            // Verificar que se haya seleccionado un tipo de oferta
-            String tipoOferta = cbTipoOferta.getValue(); // ComboBox con opciones "ESTANCIA" y "RANGO_FECHAS"
-            if (tipoOferta == null || tipoOferta.isEmpty()) {
-                controladorPrincipal.mostrarAlerta("Por favor seleccione el tipo de oferta a agregar.", Alert.AlertType.WARNING);
-                return;
-            }
-
-            // Crear la oferta según el tipo seleccionado
-            Object oferta = null;
-            if (tipoOferta.equalsIgnoreCase("ESTANCIA")) {
-                // Obtener datos para OfertaEstancia
-                float descuento = Float.parseFloat(txtDescuentoOferta.getText());
-                int numeroDias = Integer.parseInt(txtNumeroDias.getText());
-                oferta = new OfertaEstancia(descuento, numeroDias);
-            } else if (tipoOferta.equalsIgnoreCase("RANGO_FECHAS")) {
-                // Obtener datos para OfertaRangoFechas
-                float porcentajeDescuento = Float.parseFloat(txtDescuentoOferta.getText());
-                LocalDate fechaInicio = dpInicioOferta.getValue();
-                LocalDate fechaFin = dpFinOferta.getValue();
-
-                // Validar fechas
-                if (fechaInicio == null || fechaFin == null || fechaInicio.isAfter(fechaFin)) {
-                    controladorPrincipal.mostrarAlerta("Por favor introduzca un rango de fechas válido.", Alert.AlertType.WARNING);
-                    return;
-                }
-
-                oferta = new OfertaRangoFechas(porcentajeDescuento, fechaInicio, fechaFin);
-            }
-
-            // Validar que haya un alojamiento seleccionado
-            if (alojamientoSeleccionado == null) {
-                controladorPrincipal.mostrarAlerta("Debe seleccionar un alojamiento para agregar una oferta.", Alert.AlertType.WARNING);
-                return;
-            }
-
-            // Llamar al método de ReservaPrincipal para agregar la oferta
-            controladorPrincipal.agregarOfertaEspecial(alojamientoSeleccionado, oferta);
-
-            // Mostrar mensaje de éxito
-            controladorPrincipal.mostrarAlerta("Oferta agregada con éxito.", Alert.AlertType.INFORMATION);
-
-        } catch (NumberFormatException e) {
-            controladorPrincipal.mostrarAlerta("Por favor introduzca valores válidos para los campos numéricos.", Alert.AlertType.WARNING);
-        } catch (Exception e) {
-            controladorPrincipal.mostrarAlerta("Error al agregar la oferta: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
-
     }
 
     @FXML
     void editarOferta(ActionEvent event) {
-        try {
-            // Verificar que se haya seleccionado un alojamiento
-            if (alojamientoSeleccionado == null) {
-                controladorPrincipal.mostrarAlerta("Por favor seleccione un alojamiento para editar una oferta.", Alert.AlertType.WARNING);
-                return;
-            }
-
-            // Obtener el tipo de oferta a editar
-            String tipoOferta = cbTipoOferta.getValue();
-            if (tipoOferta == null || tipoOferta.isEmpty()) {
-                controladorPrincipal.mostrarAlerta("Por favor seleccione el tipo de oferta a editar.", Alert.AlertType.WARNING);
-                return;
-            }
-
-            // Crear la nueva oferta según el tipo
-            if (tipoOferta.equalsIgnoreCase("ESTANCIA")) {
-                float descuento = Float.parseFloat(txtDescuentoOferta.getText());
-                int numeroDias = Integer.parseInt(txtNumeroDias.getText());
-                OfertaEstancia nuevaOferta = new OfertaEstancia(descuento, numeroDias);
-
-                controladorPrincipal.editarOferta(alojamientoSeleccionado, "ESTANCIA", nuevaOferta);
-
-            } else if (tipoOferta.equalsIgnoreCase("RANGO_FECHAS")) {
-                float porcentajeDescuento = Float.parseFloat(txtDescuentoOferta.getText());
-                LocalDate fechaInicio = dpInicioOferta.getValue();
-                LocalDate fechaFin = dpFinOferta.getValue();
-
-                if (fechaInicio == null || fechaFin == null || fechaInicio.isAfter(fechaFin)) {
-                    throw new IllegalArgumentException("Las fechas de la oferta no son válidas.");
-                }
-
-                OfertaRangoFechas nuevaOferta = new OfertaRangoFechas(porcentajeDescuento, fechaInicio, fechaFin);
-
-                controladorPrincipal.editarOferta(alojamientoSeleccionado, "RANGO_FECHAS", nuevaOferta);
-            }
-
-            controladorPrincipal.mostrarAlerta("Oferta editada con éxito.", Alert.AlertType.INFORMATION);
-
-        } catch (Exception e) {
-            controladorPrincipal.mostrarAlerta("Error al editar la oferta: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
 
 
     }
     @FXML
     void eliminarOferta(ActionEvent event) {
-        try {
-            // Verificar que se haya seleccionado un alojamiento
-            if (ofertaSeleccionada == null) {
-                controladorPrincipal.mostrarAlerta("Por favor seleccione un alojamiento para eliminar una oferta.", Alert.AlertType.WARNING);
-                return;
-            }
 
-            // Obtener el tipo de oferta a eliminar
-            String tipoOferta = cbTipoOferta.getValue(); // Supongamos que este ComboBox contiene "ESTANCIA" o "RANGO_FECHAS"
-            if (tipoOferta == null || tipoOferta.isEmpty()) {
-                controladorPrincipal.mostrarAlerta("Por favor seleccione el tipo de oferta a eliminar.", Alert.AlertType.WARNING);
-                return;
-            }
-
-            // Llamar al método de ReservaPrincipal
-            boolean exito = controladorPrincipal.eliminarOferta(alojamientoSeleccionado, tipoOferta);
-
-            if (exito) {
-                controladorPrincipal.mostrarAlerta("Oferta eliminada con éxito.", Alert.AlertType.INFORMATION);
-            } else {
-                controladorPrincipal.mostrarAlerta("No se encontró una oferta para eliminar.", Alert.AlertType.WARNING);
-            }
-
-        } catch (Exception e) {
-            controladorPrincipal.mostrarAlerta("Error al eliminar la oferta: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
     }
     @FXML
     void cerrarSesion(ActionEvent event){

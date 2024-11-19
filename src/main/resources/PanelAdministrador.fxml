@@ -203,10 +203,10 @@
                                      <NumberAxis label="Porcentaje / Ganancia Total" />
                                  </yAxis>
                              </BarChart>
-                           <VBox alignment="CENTER" prefHeight="308.0" prefWidth="253.0" style="-fx-spacing: 30;">
+                           <VBox alignment="CENTER" prefHeight="234.0" prefWidth="494.0" style="-fx-spacing: 30;">
                               <children>
-                                 <ComboBox fx:id="cbListaAlojamientos" prefHeight="26.0" prefWidth="165.0" promptText="Lista de alojamientos" />
-                                   <Button alignment="TOP_LEFT" onAction="#actualizarOcupacionGanancias" text="Actualizar Ocupación y Ganancias" />
+                                 <ComboBox fx:id="cbListaAlojamientos" prefHeight="26.0" prefWidth="177.0" promptText="Lista de alojamientos" />
+                                   <Button fx:id="btnActualizar" alignment="TOP_LEFT" onAction="#actualizarOcupacionGanancias" text="Actualizar Ocupación y Ganancias" />
                               </children>
                            </VBox>
                          </HBox>
@@ -221,7 +221,7 @@
                            </BarChart>
                            <VBox alignment="CENTER" prefHeight="171.0" prefWidth="205.0" style="-fx-spacing: 30;">
                               <children>
-                                 <ComboBox fx:id="cbCiudadEstadisticas" prefHeight="26.0" prefWidth="89.0" promptText="Ciudad" />
+                                 <ComboBox fx:id="cbCiudadEstadisticas" prefHeight="26.0" prefWidth="177.0" promptText="Ciudad" />
                                    <Button onAction="#actualizarPopularidadAlojamientos" text="Actualizar Popularidad" />
                               </children>
                            </VBox>

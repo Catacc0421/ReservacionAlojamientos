@@ -1,9 +1,6 @@
 package co.edu.uniquindio.reservacionAlojamientos.servicios;
 
-import co.edu.uniquindio.reservacionAlojamientos.modelo.Alojamiento;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.Habitacion;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.Reserva;
-import co.edu.uniquindio.reservacionAlojamientos.modelo.Usuario;
+import co.edu.uniquindio.reservacionAlojamientos.modelo.*;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.enums.TipoAlojamiento;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.enums.TipoServicio;
 
@@ -11,6 +8,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 public interface ReservaServicios {
@@ -47,6 +45,11 @@ public interface ReservaServicios {
                                      List<TipoServicio> serviciosIncluidos, File imagen, Double costoAseo,
                                      Double costoMantenimiento, Double precioPorNoche, Integer capacidadMaxima,
                                      List<Habitacion> habitaciones) throws Exception;
+    double calcularOcupacion(Alojamiento alojamiento);
+    double calcularGanancia(Alojamiento alojamiento);
+    boolean agregarResenaSiReservaHaPasado(Alojamiento alojamiento, Resena resena, Usuario usuario);
+    Map<Alojamiento, Integer> obtenerReservasPorCiudad(String ciudad);
+    Map<String, Double> calcularRentabilidadPorTipo();
     boolean actualizarContrasena(String correo, String nuevaContrasena, String codigoVerificacion) throws Exception;
     void realizarReserva(Usuario usuario, LocalDate fechaInicio, LocalDate fechaFin,
                          Alojamiento alojamiento, int numeroHuespedes, Habitacion habitacionSeleccionada) throws Exception;

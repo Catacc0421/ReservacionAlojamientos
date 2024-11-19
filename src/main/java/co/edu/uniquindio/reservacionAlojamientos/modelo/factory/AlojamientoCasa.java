@@ -3,6 +3,7 @@ package co.edu.uniquindio.reservacionAlojamientos.modelo.factory;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.Alojamiento;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.OfertaEstancia;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.OfertaRangoFechas;
+import co.edu.uniquindio.reservacionAlojamientos.modelo.Resena;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.enums.TipoServicio;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,8 +21,8 @@ public class AlojamientoCasa extends Alojamiento {
     private int capacidadMaxima;
 
     @Builder
-    public AlojamientoCasa(String id, String nombreAlojamiento, String ciudad, String descripcion, File image, List<TipoServicio> serviciosIncluidos, double costoAseo,double costoMantenimiento, double precioNoche, int capacidadMaxima, OfertaRangoFechas ofertaRangoFechas, OfertaEstancia ofertaEstancia) {
-        super(id, nombreAlojamiento, ciudad, descripcion, image, serviciosIncluidos, ofertaEstancia, ofertaRangoFechas);
+    public AlojamientoCasa(String id, String nombreAlojamiento, String ciudad, String descripcion, File image, List<TipoServicio> serviciosIncluidos, double costoAseo,double costoMantenimiento, double precioNoche, int capacidadMaxima, OfertaRangoFechas ofertaRangoFechas, OfertaEstancia ofertaEstancia, List<Resena> resenas) {
+        super(id, nombreAlojamiento, ciudad, descripcion, image, serviciosIncluidos, ofertaEstancia, ofertaRangoFechas, resenas);
         this.costoAseo = costoAseo;
         this.costoMantenimiento = costoMantenimiento;
         this.precioNoche = precioNoche;

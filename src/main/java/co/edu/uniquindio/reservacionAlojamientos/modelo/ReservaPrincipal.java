@@ -7,8 +7,15 @@ import co.edu.uniquindio.reservacionAlojamientos.modelo.factory.AlojamientoCasa;
 import co.edu.uniquindio.reservacionAlojamientos.modelo.factory.AlojamientoHotel;
 import co.edu.uniquindio.reservacionAlojamientos.servicios.ReservaServicios;
 import co.edu.uniquindio.reservacionAlojamientos.utils.EnvioEmail;
-import java.time.temporal.ChronoUnit;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.time.temporal.ChronoUnit;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
@@ -31,6 +38,14 @@ public class ReservaPrincipal implements ReservaServicios {
         reservas = new ArrayList<>();
         habitaciones = new ArrayList<>();
         codigosVerificacion = new ArrayList<>();
+        try {
+            registrarUsuario ("1092851309", "abajabjabajj", "ksnkakssk", "catalina.clavijoc@uqvirtual.edu.co", "12345");
+            agregarAlojamiento(
+                    "CASA","CASA 1", "ssssw", "", new ArrayList<>(), new File("C:\\Users\\catal\\Downloads\\Imagenes.jpg"), 0.0, 0.0, 50000.0, 20, new ArrayList<>()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     public static ReservaPrincipal getInstancia() {
         if (INSTANCIA == null) {
@@ -447,98 +462,132 @@ public class ReservaPrincipal implements ReservaServicios {
     public void realizarReserva(Usuario usuario, LocalDate fechaInicio, LocalDate fechaFin,
                                 Alojamiento alojamiento, int numeroHuespedes, Habitacion habitacionSeleccionada) throws Exception {
 
-        // Validar que la fecha de reserva sea con al menos dos días de anticipación
-        if (!esFechaValida(fechaInicio)) {
-            throw new Exception("La reserva debe realizarse con al menos 5 días de anticipación.");
-        }
+        // 1. Validar la reserva (fecha, disponibilidad, etc.)
+        validarReserva(fechaInicio, alojamiento, fechaFin, numeroHuespedes, habitacionSeleccionada);
 
-        // Validar disponibilidad del alojamiento para las fechas seleccionadas y el número de huéspedes
-        if (!estaDisponibleAlojamiento(alojamiento, fechaInicio, fechaFin, numeroHuespedes)) {
-            throw new Exception("El alojamiento no está disponible para las fechas y número de huéspedes seleccionados.");
-        }
+        // 2. Calcular el costo total de la reserva
+        double costoTotal = calcularCostoTotal(alojamiento, fechaInicio, fechaFin, habitacionSeleccionada);
 
-        // Calcular el costo de la reserva
-        double costoAseo = 0;
-        double costoMantenimiento = 0;
-        double precioPorNoche = 0;
-        long diasEstancia = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
-
-        // Si es una Casa o Apartamento, obtenemos el precio de la clase correspondiente
-        if (alojamiento instanceof AlojamientoCasa) {
-            AlojamientoCasa casa = (AlojamientoCasa) alojamiento;
-            costoAseo = casa.getCostoAseo();
-            costoMantenimiento = casa.getCostoMantenimiento();
-            precioPorNoche = casa.getPrecioNoche();
-        } else if (alojamiento instanceof AlojamientoApartamento) {
-            AlojamientoApartamento apartamento = (AlojamientoApartamento) alojamiento;
-            costoAseo = apartamento.getCostoAseo();
-            costoMantenimiento = apartamento.getCostoMantenimiento();
-            precioPorNoche = apartamento.getPrecioNoche();
-        }
-
-        // Si es un Hotel, obtenemos el precio de la habitación seleccionada
-        if (alojamiento instanceof AlojamientoHotel) {
-            if (habitacionSeleccionada == null) {
-                throw new Exception("Debe seleccionar una habitación para realizar la reserva.");
-            }
-            precioPorNoche = habitacionSeleccionada.getPrecio();
-        }
-
-        // Calcular el costo total
-        double costoTotal = (precioPorNoche * diasEstancia) + costoAseo + costoMantenimiento;
-
-        // Calcular el descuento por ofertas especiales
-        double descuento = calcularDescuento(alojamiento, fechaInicio, fechaFin);
-        double montoDescuento = (costoTotal * descuento) / 100;
-        costoTotal -= montoDescuento; // Aplicar el descuento al costo total
-
-        // Verificar que el usuario tenga suficiente saldo en su billetera virtual
+        // 3. Verificar que el usuario tenga suficiente saldo en la billetera virtual
         if (!usuario.getBilleteraVirtual().tieneSuficienteSaldo(costoTotal)) {
             throw new Exception("No tiene suficiente saldo en su billetera virtual para realizar la reserva.");
         }
 
-        // Crear el ID único para la reserva (UUID)
+        // 4. Generar ID único para la reserva
         String idReserva = UUID.randomUUID().toString();
 
-        // Crear la factura para la reserva
-        Factura factura = new Factura(costoTotal); // Suponiendo que la factura solo tiene el costo total
+        // 5. Crear la factura con el costo total
+        Factura factura = new Factura(costoTotal);
 
-        // Crear la reserva con el ID generado
+        // 6. Crear la nueva reserva
         Reserva nuevaReserva = new Reserva(idReserva, usuario, alojamiento, fechaInicio, fechaFin, numeroHuespedes, "Confirmada", factura);
-        nuevaReserva.setId(idReserva); // Asignar el ID generado a la reserva
 
-        // Agregar la reserva a la lista de reservas
+        // 7. Agregar la reserva a la lista de reservas y descontar el saldo del usuario
         reservas.add(nuevaReserva);
-
-        // Descontar el costo de la billetera virtual
         usuario.getBilleteraVirtual().restarSaldo(costoTotal);
 
-        // Enviar mensaje de confirmación de reserva
+        // 8. Enviar la confirmación al usuario (con código QR adjunto)
+        enviarConfirmacionConQR(usuario, alojamiento, fechaInicio, fechaFin, numeroHuespedes, costoTotal, habitacionSeleccionada, idReserva);
+    }
+    public BufferedImage generarCodigoQR(String idReserva) {
+        try {
+            // Crear el generador de código QR
+            MultiFormatWriter writer = new MultiFormatWriter();
+
+            // Codificar el idReserva como un código QR
+            BitMatrix bitMatrix = writer.encode(idReserva, BarcodeFormat.QR_CODE, 200, 200);
+
+            // Convertir el BitMatrix en una imagen BufferedImage
+            BufferedImage imagenQR = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < 200; x++) {
+                for (int y = 0; y < 200; y++) {
+                    imagenQR.setRGB(x, y, bitMatrix.get(x, y) ? 0x000000 : 0xFFFFFF); // Color negro para el QR, blanco para el fondo
+                }
+            }
+            return imagenQR;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Si ocurre un error, retornar null
+        }
+    }
+
+
+    // Método auxiliar para enviar la confirmación con código QR
+    private void enviarConfirmacionConQR(Usuario usuario, Alojamiento alojamiento, LocalDate fechaInicio,
+                                         LocalDate fechaFin, int numeroHuespedes, double costoTotal,
+                                         Habitacion habitacionSeleccionada, String idReserva) {
+        try {
+            // Crear el mensaje del correo
+            String mensaje = String.format(
+                    "Su reserva ha sido creada con éxito:\n\n" +
+                            "Alojamiento: %s\nFecha de Inicio: %s\nFecha de Fin: %s\nHuéspedes: %d\nHabitación: %s\nCosto Total: $%.2f\n" +
+                            "ID de Reserva: %s\n",
+                    alojamiento.getNombreAlojamiento(), fechaInicio, fechaFin, numeroHuespedes,
+                    (habitacionSeleccionada != null ? habitacionSeleccionada.getNumeroHabitacion() : "N/A"),
+                    costoTotal, idReserva
+            );
+
+            // Generar el código QR con el ID de reserva
+            BufferedImage imagenQR = generarCodigoQR(idReserva);  // Método que generará el QR
+            byte[] qrBytes = obtenerImagenComoBytes(imagenQR);  // Convertir la imagen a bytes
+
+            // Enviar el correo con la confirmación y el código QR adjunto
+            EnvioEmail envioEmail = new EnvioEmail(usuario.getEmail(), "Confirmación de Reserva", mensaje);
+            envioEmail.setDestinatario(usuario.getEmail());
+            envioEmail.setAsunto("Confirmación de Reserva");
+            envioEmail.setMensaje(mensaje);
+            envioEmail.enviarNotificacionConAdjunto(qrBytes);  // Método que maneja el envío con adjunto (ver más abajo)
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método auxiliar para convertir la imagen QR a bytes
+    private byte[] obtenerImagenComoBytes(BufferedImage imagen) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(imagen, "PNG", baos);
+        return baos.toByteArray();
+    }
+    // Métodos auxiliares
+    private void validarReserva(LocalDate fechaInicio, Alojamiento alojamiento, LocalDate fechaFin, int numeroHuespedes, Habitacion habitacionSeleccionada) throws Exception {
+        if (!esFechaValida(fechaInicio)) {
+            throw new Exception("La reserva debe realizarse con al menos 5 días de anticipación.");
+        }
+        if (!estaDisponibleAlojamiento(alojamiento, fechaInicio, fechaFin, numeroHuespedes)) {
+            throw new Exception("El alojamiento no está disponible para las fechas y número de huéspedes seleccionados.");
+        }
+    }
+
+    private double calcularCostoTotal(Alojamiento alojamiento, LocalDate fechaInicio, LocalDate fechaFin, Habitacion habitacionSeleccionada) {
+        double costoAseo = 0, costoMantenimiento = 0, precioPorNoche = 0;
+        long diasEstancia = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
+
+        if (alojamiento instanceof AlojamientoCasa casa) {
+            costoAseo = casa.getCostoAseo();
+            costoMantenimiento = casa.getCostoMantenimiento();
+            precioPorNoche = casa.getPrecioNoche();
+        } else if (alojamiento instanceof AlojamientoApartamento apartamento) {
+            costoAseo = apartamento.getCostoAseo();
+            costoMantenimiento = apartamento.getCostoMantenimiento();
+            precioPorNoche = apartamento.getPrecioNoche();
+        } else if (alojamiento instanceof AlojamientoHotel) {
+            precioPorNoche = habitacionSeleccionada.getPrecio();
+        }
+
+        double costoTotal = (precioPorNoche * diasEstancia) + costoAseo + costoMantenimiento;
+        double descuento = calcularDescuento(alojamiento, fechaInicio, fechaFin);
+        return costoTotal - (costoTotal * descuento / 100);
+    }
+
+    private void enviarConfirmacion(Usuario usuario, Alojamiento alojamiento, LocalDate fechaInicio, LocalDate fechaFin, int numeroHuespedes, double costoTotal, Habitacion habitacionSeleccionada) {
         String mensaje = String.format(
-                "Su reserva ha sido creada con éxito con los siguientes detalles:\n\n" +
-                        "Alojamiento: %s\n" +
-                        "Fecha de Inicio: %s\n" +
-                        "Fecha de Fin: %s\n" +
-                        "Número de Huéspedes: %d\n" +
-                        "Costo por Noche: $%.2f\n" +
-                        "Costo Aseo: $%.2f\n" +
-                        "Costo Mantenimiento: $%.2f\n" +
-                        "Descuento Aplicado: $%.2f\n" +
-                        "Costo Total: $%.2f\n\n" +
-                        "Gracias por utilizar nuestro sistema de reservas.\n" +
-                        "Atentamente,\nEl equipo de Reservas",
-                alojamiento.getNombreAlojamiento(),
-                fechaInicio.toString(),
-                fechaFin.toString(),
-                numeroHuespedes,
-                precioPorNoche,
-                costoAseo,
-                costoMantenimiento,
-                montoDescuento,
+                "Su reserva ha sido creada con éxito:\n\n" +
+                        "Alojamiento: %s\nFecha de Inicio: %s\nFecha de Fin: %s\nHuéspedes: %d\nHabitación: %s\nCosto Total: $%.2f\n",
+                alojamiento.getNombreAlojamiento(), fechaInicio, fechaFin, numeroHuespedes,
+                (habitacionSeleccionada != null ? habitacionSeleccionada.getNumeroHabitacion() : "N/A"),
                 costoTotal
         );
-
-        // Enviar correo electrónico con los detalles de la reserva
         enviarEmail(usuario, mensaje, "Confirmación de Reserva");
     }
     public boolean esFechaValida(LocalDate fecha) {
@@ -623,13 +672,17 @@ public class ReservaPrincipal implements ReservaServicios {
         // Cambiar el estado de la reserva a 'Cancelada'
         reserva.setEstado("Cancelada");
 
-        // Si es necesario, devolver el dinero al usuario (en función de la lógica de tu aplicación)
-        // Asumiendo que el costo total está en la factura
+        // Obtener el costo total de la reserva
         double costoTotal = reserva.getFactura().getValorTotal();
+
+        // Calcular el 60% del costo total
+        double porcentajeDevolucion = costoTotal * 0.60;
+
+        // Obtener el usuario asociado a la reserva
         Usuario usuario = reserva.getUsuario();
 
-        // Devolver el saldo a la billetera virtual del usuario
-        usuario.getBilleteraVirtual().sumarSaldo(costoTotal);
+        // Sumar el 60% del valor total de la reserva a la billetera virtual del usuario
+        usuario.getBilleteraVirtual().sumarSaldo(porcentajeDevolucion);
 
         // Eliminar la reserva de la lista de reservas
         reservas.remove(reserva);
@@ -641,14 +694,16 @@ public class ReservaPrincipal implements ReservaServicios {
                         "Fecha de Inicio: %s\n" +
                         "Fecha de Fin: %s\n" +
                         "Número de Huéspedes: %d\n" +
-                        "Costo Total: $%.2f\n\n" +
+                        "Costo Total: $%.2f\n" +
+                        "Monto devuelto: $%.2f\n\n" +
                         "Gracias por utilizar nuestro sistema de reservas.\n" +
                         "Atentamente,\nEl equipo de Reservas",
                 reserva.getAlojamiento().getNombreAlojamiento(),
                 reserva.getFechaInicio().toString(),
                 reserva.getFechaFin().toString(),
                 reserva.getNumeroHuespedes(),
-                costoTotal
+                costoTotal,
+                porcentajeDevolucion
         );
 
         // Enviar correo electrónico de confirmación de cancelación
@@ -820,6 +875,103 @@ public class ReservaPrincipal implements ReservaServicios {
         }
 
         return false; // No se pudo editar
+    }
+    @Override
+    public double calcularOcupacion(Alojamiento alojamiento) {
+        int totalHuespedes = 0;
+        int capacidadTotal = 0;
+
+        if (alojamiento instanceof AlojamientoApartamento) {
+            capacidadTotal = ((AlojamientoApartamento) alojamiento).getCapacidadMaxima();
+        } else if (alojamiento instanceof AlojamientoCasa) {
+            capacidadTotal = ((AlojamientoCasa) alojamiento).getCapacidadMaxima();
+        } else if (alojamiento instanceof AlojamientoHotel) {
+            capacidadTotal = ((AlojamientoHotel) alojamiento).getHabitaciones().stream()
+                    .mapToInt(Habitacion::getCapacidad)
+                    .sum();
+        }
+
+        for (Reserva reserva : reservas) {
+            if (reserva.getAlojamiento().equals(alojamiento)) {
+                totalHuespedes += reserva.getNumeroHuespedes();
+            }
+        }
+
+        return (capacidadTotal > 0) ? (totalHuespedes / (double) capacidadTotal) * 100 : 0;
+    }
+    @Override
+
+    // Calcula la ganancia total de un alojamiento
+    public double calcularGanancia(Alojamiento alojamiento) {
+        double totalGanancia = 0;
+
+        for (Reserva reserva : reservas) {
+            if (reserva.getAlojamiento().equals(alojamiento)) {
+                totalGanancia += reserva.getFactura().getValorTotal();
+            }
+        }
+
+        return totalGanancia;
+    }
+    @Override
+
+    // Obtiene el número de reservas por cada alojamiento en una ciudad específica
+    public Map<Alojamiento, Integer> obtenerReservasPorCiudad(String ciudad) {
+        Map<Alojamiento, Integer> reservasPorAlojamiento = new HashMap<>();
+
+        for (Reserva reserva : reservas) {
+            Alojamiento alojamiento = reserva.getAlojamiento();
+            if (alojamiento.getCiudad().equals(ciudad)) {
+                reservasPorAlojamiento.put(
+                        alojamiento, reservasPorAlojamiento.getOrDefault(alojamiento, 0) + 1
+                );
+            }
+        }
+
+        return reservasPorAlojamiento;
+    }
+    @Override
+
+    // Calcula el porcentaje de rentabilidad por tipo de alojamiento
+    public Map<String, Double> calcularRentabilidadPorTipo() {
+        Map<String, Double> rentabilidadPorTipo = new HashMap<>();
+        double totalGanancia = 0;
+
+        for (Reserva reserva : reservas) {
+            Alojamiento alojamiento = reserva.getAlojamiento();
+            String tipo = alojamiento.getClass().getSimpleName();
+            double ganancia = reserva.getFactura().getValorTotal();
+
+            rentabilidadPorTipo.put(tipo, rentabilidadPorTipo.getOrDefault(tipo, 0.0) + ganancia);
+            totalGanancia += ganancia;
+        }
+
+        // Convertir a porcentaje
+        for (String tipo : rentabilidadPorTipo.keySet()) {
+            rentabilidadPorTipo.put(tipo, (rentabilidadPorTipo.get(tipo) / totalGanancia) * 100);
+        }
+
+        return rentabilidadPorTipo;
+    }
+    public boolean haPasadoLaFechaDeReserva(Alojamiento alojamiento, Usuario usuario) {
+        for (Reserva reserva : reservas) {
+            if (reserva.getAlojamiento().equals(alojamiento) && reserva.getUsuario().equals(usuario)) {
+                // Compara la fecha actual con la fecha de fin de la reserva
+                if (LocalDate.now().isAfter(reserva.getFechaFin())) {
+                    return true; // La reserva ha terminado
+                }
+            }
+        }
+        return false; // No se ha encontrado una reserva pasada
+    }
+    @Override
+    // Método para añadir una reseña a un alojamiento solo si la reserva ha pasado
+    public boolean agregarResenaSiReservaHaPasado(Alojamiento alojamiento, Resena resena, Usuario usuario) {
+        if (haPasadoLaFechaDeReserva(alojamiento, usuario)) {
+            alojamiento.getResenas().add(resena);
+            return true;
+        }
+        return false;
     }
 
 
